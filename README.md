@@ -1,0 +1,3 @@
+## LEGO Mindstorms practical course
+
+Git repository ...
