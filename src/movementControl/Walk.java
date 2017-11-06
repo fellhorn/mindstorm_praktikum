@@ -67,6 +67,6 @@ public class Walk extends AbstractInterruptableStateRunner {
 		Timer timer = new Timer(1000, new ControllListener());
 		timer.start();
 		
-		while(!(touch.isPressed()));
+		while (true);
 	}
 }
