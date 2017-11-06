@@ -1,4 +1,4 @@
-package mainRobotControl;
+package src.mainRobotControl;
 import lejos.hardware.Button;
 import lejos.hardware.Key;
 import lejos.hardware.KeyListener;
