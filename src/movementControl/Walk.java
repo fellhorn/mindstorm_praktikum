@@ -21,4 +21,19 @@ public class Walk extends AbstractInterruptableStateRunner {
 		right.forward();
 		while(!(touch.isPressed()));
 	}
+	
+	@Override
+	protected void preLoopActions() {
+		return;		
+	}
+
+	@Override
+	protected void inLoopActions() {
+		return;
+	}
+
+	@Override
+	protected void postLoopActions() {
+		return;
+	}
 }

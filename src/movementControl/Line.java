@@ -6,12 +6,19 @@ public class Line extends AbstractInterruptableStateRunner {
 	
 	private DebugMessages message = new DebugMessages(5);
 	
-	protected void runState() {
-		try {
-			message.echo("Following the white line.");
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			return;
-		}
+	@Override
+	protected void preLoopActions() {
+		message.clear();
+		message.echo("Following white line.");		
+	}
+
+	@Override
+	protected void inLoopActions() {
+		return;
+	}
+
+	@Override
+	protected void postLoopActions() {
+		return;
 	}
 }
