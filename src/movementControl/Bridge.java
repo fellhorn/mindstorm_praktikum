@@ -6,12 +6,19 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	
 	private DebugMessages message = new DebugMessages(5);
 	
-	protected void runState() {
-		try {
-			message.echo("Crossing Bridge. Don't fall!");
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			return;
-		}
+	@Override
+	protected void preLoopActions() {
+		message.clear();
+		message.echo("Crossing Bridge. Don't fall!");		
+	}
+
+	@Override
+	protected void inLoopActions() {
+		return;
+	}
+
+	@Override
+	protected void postLoopActions() {
+		return;
 	}
 }

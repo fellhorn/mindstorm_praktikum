@@ -3,8 +3,8 @@ import lejos.hardware.Button;
 import lejos.hardware.Key;
 import lejos.hardware.KeyListener;
 
-public abstract class AbstractInterruptableStateRunner extends Thread {
-	public final Key INTERRUPT_BUTTON = Button.ENTER;
+public abstract class AbstractInterruptableStateRunner {
+	public final Key INTERRUPT_BUTTON = Button.LEFT;
 	protected boolean running = true;
 	
 	public void run() {
@@ -14,10 +14,16 @@ public abstract class AbstractInterruptableStateRunner extends Thread {
 		    @Override public void keyPressed(final Key k){
 		      running = false;}
 		});
+		preLoopActions();
 		while(running) {
-			runState();
+			inLoopActions();
 		}
+		postLoopActions();
 	}
 		
-	protected abstract void runState();
+	protected abstract void preLoopActions();
+	
+	protected abstract void inLoopActions();
+	
+	protected abstract void postLoopActions();
 }

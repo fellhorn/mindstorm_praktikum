@@ -61,22 +61,22 @@ public class StateMachine {
 	
 	private void startIdleState(ParcourState previousState) {
 		currentController = new src.idleControl.Idle();
-		currentController.start();
+		currentController.run();
 	}
 	
 	private void startLineState(ParcourState previousState) {
 		currentController = new src.movementControl.Line();
-		currentController.start();
+		currentController.run();
 	}
 	
 	private void startBridgeState(ParcourState previousState) {
 		currentController = new src.movementControl.Bridge();
-		currentController.start();
+		currentController.run();
 	}
 	
 	private void startWalkingState(ParcourState previousState) {
 		currentController = new src.movementControl.Walk();
-		currentController.start();
+		currentController.run();
 	}
 	
 	public ParcourState getState() {
