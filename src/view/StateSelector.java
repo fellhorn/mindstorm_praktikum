@@ -5,7 +5,7 @@ import java.util.Arrays;
 import src.mainRobotControl.ParcourState;;
 
 public class StateSelector {
-	private static final int TOP_ROW = 5;
+	private static final int TOP_ROW = 1;
 	private static final String TITLE = "States selection";
 	
 	private TextMenu textMenu;
