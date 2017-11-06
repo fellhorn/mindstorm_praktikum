@@ -4,22 +4,70 @@ import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.robotics.TouchAdapter;
+import lejos.utility.Timer;
+import lejos.utility.TimerListener;
 import src.mainRobotControl.AbstractInterruptableStateRunner;
 
 
 public class Walk extends AbstractInterruptableStateRunner {
 
-	private EV3TouchSensor t = new EV3TouchSensor(SensorPort.S1);
+	private EV3TouchSensor t = new EV3TouchSensor(SensorPort.S4);
 	private TouchAdapter touch = new TouchAdapter(t);
 	private EV3LargeRegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.A);
 	private EV3LargeRegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.D);
+	private int setValue = 0;
+	
+	private class ControllListener implements TimerListener {
+		@Override
+		public void timedOut() {
+			adjustSpeed();
+			left.resetTachoCount();
+			right.resetTachoCount();
+		}
+		
+		private void adjustSpeed() {
+			// Get actual value that was measured
+			int tachoLeft = left.getTachoCount();
+			int tachoRight = right.getTachoCount();
+			
+			int diffLeft = setValue - tachoLeft;
+			int diffRight = setValue - tachoRight;
+			
+			left.setSpeed(setValue + diffLeft);
+			right.setSpeed(setValue + diffRight);
+		}
+
+		private void adjustSpeedDifferential() {
+			// Get actual value that was measured
+			int tachoLeft = left.getTachoCount();
+			int tachoRight = right.getTachoCount();
+			
+			int diff = tachoLeft - tachoRight;
+			
+			if (diff < 0) {
+				// Right > Left
+				left.setSpeed(setValue - diff/2);
+				right.setSpeed(setValue + diff/2);
+			} else {
+				// Right <= Left
+				left.setSpeed(setValue - diff/2);
+				right.setSpeed(setValue + diff/2);
+			}
+		}
+	}
 	
 	protected void runState() {
-		left.setSpeed((int) (left.getMaxSpeed()*0.7));
+		// Start engines
+		left.setSpeed(setValue);
+		right.setSpeed(setValue);
 		left.forward();
-		right.setSpeed((int) (right.getMaxSpeed()*0.7));
 		right.forward();
-		while(!(touch.isPressed()));
+		
+		// Start controller
+		Timer timer = new Timer(1000, new ControllListener());
+		timer.start();
+		
+		while (true);
 	}
 	
 	@Override
