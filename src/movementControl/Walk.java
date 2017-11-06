@@ -56,7 +56,8 @@ public class Walk extends AbstractInterruptableStateRunner {
 		}
 	}
 	
-	protected void runState() {
+	@Override
+	protected void preLoopActions() {
 		// Start engines
 		left.setSpeed(setValue);
 		right.setSpeed(setValue);
@@ -66,12 +67,6 @@ public class Walk extends AbstractInterruptableStateRunner {
 		// Start controller
 		Timer timer = new Timer(1000, new ControllListener());
 		timer.start();
-		
-		while (true);
-	}
-	
-	@Override
-	protected void preLoopActions() {
 		return;		
 	}
 
