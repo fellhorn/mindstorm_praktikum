@@ -14,10 +14,10 @@ public class Main {
 	
 	public static void main(String[] args) {
 		QUIT_BUTTON.addKeyListener(new KeyListener(){
-		    @Override public void keyReleased(    final Key k){
+		    @Override public void keyReleased(final Key k){
 		    }
-		    @Override public void keyPressed(    final Key k){
-		      running = false;
+		    @Override public void keyPressed(final Key k){
+		      System.exit(0);
 		    }
 		});
 		
