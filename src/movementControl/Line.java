@@ -18,6 +18,8 @@ public class Line extends AbstractInterruptableStateRunner {
 	private boolean adjust = false;
 	private boolean assumeGap  = false;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
+	
+	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f; 
 
 	
 	
@@ -82,7 +84,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			if(!turnBack) {
 				//search for line on the left
 				Curves.smoothSpeededLeftTurn(-1, 450);	
-				if (rotDegree[0] - rotDegree[1] < -90.0) {
+				if (rotDegree[0] - rotDegree[1] < -90.0 - SEARCH_ROTATION_TOLERANCE) {
 					turnBack = true;
 				}
 			} else if(turnBack && (rotDegree[0] - rotDegree[1] < 0.0)){
@@ -91,7 +93,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			} else if(turnBack && !adjust){
 				//search for line on the right
 				Curves.smoothSpeededRightTurn(-1, 450);
-				if (rotDegree[0] - rotDegree[1] > 90.0) {
+				if (rotDegree[0] - rotDegree[1] > 90.0 + SEARCH_ROTATION_TOLERANCE) {
 					adjust = true;
 				}
 			} else if(adjust && (rotDegree[0] - rotDegree[1] > 0.0)) {
@@ -108,7 +110,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			if(!turnBack) {
 				//search for line on the right
 				Curves.smoothSpeededRightTurn(-1, 450);	
-				if (rotDegree[0] - rotDegree[1] < -90.0) {
+				if (rotDegree[0] - rotDegree[1] < -90.0 - SEARCH_ROTATION_TOLERANCE) {
 					turnBack = true;
 				}
 			} else if(turnBack && (rotDegree[0] - rotDegree[1] < 0.0)){
@@ -117,7 +119,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			} else if(turnBack && !adjust){
 				//search for line on the left
 				Curves.smoothSpeededLeftTurn(-1, 450);
-				if (rotDegree[0] - rotDegree[1] > 90.0) {
+				if (rotDegree[0] - rotDegree[1] > 90.0 + SEARCH_ROTATION_TOLERANCE) {
 					adjust = true;
 				}
 			} else if(adjust && (rotDegree[0] - rotDegree[1] > 0.0)) {
