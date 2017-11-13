@@ -60,6 +60,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		default: 
 			//TODO think of better error case behavior
 			//stop robot if measurement error occurs
+			System.out.println("\n" + groundColor);
 			running = false; 
 			break;
 		}
@@ -84,6 +85,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				Curves.smoothSpeededLeftTurn(-1, 450);	
 				if (rotDegree[0] - rotDegree[1] < -90.0) {
 					turnBack = true;
+					StraightLines.stop();
 				}
 			} else if(turnBack && (rotDegree[0] - rotDegree[1] < 0.0)){
 				//line not found => you can turn back quicker
@@ -93,6 +95,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				Curves.smoothSpeededRightTurn(-1, 450);
 				if (rotDegree[0] - rotDegree[1] > 90.0) {
 					adjust = true;
+					StraightLines.stop();
 				}
 			} else if(adjust && (rotDegree[0] - rotDegree[1] > 0.0)) {
 				//line not found => you can turn back to original position quicker
@@ -108,19 +111,21 @@ public class Line extends AbstractInterruptableStateRunner {
 			if(!turnBack) {
 				//search for line on the right
 				Curves.smoothSpeededRightTurn(-1, 450);	
-				if (rotDegree[0] - rotDegree[1] < -90.0) {
+				if (rotDegree[0] - rotDegree[1] > 90.0) {
 					turnBack = true;
+					StraightLines.stop();
 				}
-			} else if(turnBack && (rotDegree[0] - rotDegree[1] < 0.0)){
+			} else if(turnBack && (rotDegree[0] - rotDegree[1] > 0.0)){
 				//line not found => you can turn back quicker
 				Curves.smoothSpeededLeftTurn(-1, 900);	
 			} else if(turnBack && !adjust){
 				//search for line on the left
 				Curves.smoothSpeededLeftTurn(-1, 450);
-				if (rotDegree[0] - rotDegree[1] > 90.0) {
+				if (rotDegree[0] - rotDegree[1] < -90.0) {
 					adjust = true;
+					StraightLines.stop();
 				}
-			} else if(adjust && (rotDegree[0] - rotDegree[1] > 0.0)) {
+			} else if(adjust && (rotDegree[0] - rotDegree[1] < 0.0)) {
 				//line not found => you can turn back to original position quicker
 				Curves.smoothSpeededRightTurn(-1, 900);
 			} else {
