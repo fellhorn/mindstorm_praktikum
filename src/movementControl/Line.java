@@ -10,8 +10,8 @@ import src.skills.*;
 public class Line extends AbstractInterruptableStateRunner {
 	
 	private DebugMessages message = new DebugMessages(1);
-	private EV3ColorSensor col = new EV3ColorSensor(SensorPort.S2);  //TODO check port
-	private EV3GyroSensor gyro = new EV3GyroSensor(SensorPort.S3); //TODO check port
+	private EV3ColorSensor col = new EV3ColorSensor(SensorPort.S2);  
+	private EV3GyroSensor gyro = new EV3GyroSensor(SensorPort.S1);
 	private boolean lastLossRight = true;  //TODO should be set according to first curve 
 	private boolean rotating = false;
 	private boolean turnBack = false;
