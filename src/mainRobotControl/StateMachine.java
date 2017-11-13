@@ -6,7 +6,7 @@ public class StateMachine {
 	private static StateMachine instance = null;
 	private ParcourState currentState = ParcourState.IDLE;
 	private AbstractInterruptableStateRunner currentController;
-	private DebugMessages def= new DebugMessages(15);
+	private DebugMessages def = new DebugMessages(1);
 	
 	private StateMachine() {
 		currentState = ParcourState.IDLE;
@@ -40,10 +40,7 @@ public class StateMachine {
 	private void startStateController(ParcourState previousState) {
 		switch (currentState) {
 		case IDLE: startIdleState(previousState); break;
-		case LINE_FOLLOWER:
-		case GAP_IN_LINE: startLineState(previousState); break;
-		case ASCEND_BRIDGE:
-		case DESCENT_BRIDGE:
+		case LINE_FOLLOWER: startLineState(previousState); break;
 		case ON_BRIDGE: startBridgeState(previousState); break;
 		case RUN_AD_1: startWalkingState(previousState); break;
 		default:
