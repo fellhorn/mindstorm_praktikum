@@ -9,13 +9,12 @@ public class StraightLines {
 	private static EV3LargeRegulatedMotor left;
 	private  static EV3LargeRegulatedMotor right;
 	private static DebugMessages message = new DebugMessages(2);
+	
+	
 	public static void regulatedForwardDrive(int speedRef) {
 		adjustSpeed(speedRef);
 		getLeft().forward();
-		getRight().forward();
-	//	left.resetTachoCount();
-	//	right.resetTachoCount();
-		
+		getRight().forward();		
 	}
 
 	public static void startEngines(int speed) {
@@ -34,18 +33,19 @@ public class StraightLines {
 		getRight().stop();
 	}
 
-	//implementation with tacho count (as in Walk) doesn't work right now since timing can't be guaranteed
+	
 	private static void adjustSpeed(int speedRef) {
 		// Get actual value that was measured
-		int tachoLeft = getLeft().getSpeed();
-		int tachoRight = getRight().getSpeed();
+		int tachoLeft = getLeft().getTachoCount();
+		int tachoRight = getRight().getTachoCount();
 		
-		int diffLeft = speedRef - tachoLeft;
-		int diffRight = speedRef - tachoRight;
-		
-		getLeft().setSpeed(speedRef + diffLeft);
-		getRight().setSpeed(speedRef + diffRight);
+		int diff = tachoLeft - tachoRight;
+	
+		getLeft().setSpeed(speedRef - diff);
+		getRight().setSpeed(speedRef + diff);
 		message.echo("New Speed");
+		//System.out.println("d=" + diff + ",L" + src.skills.StraightLines.getLeft().getSpeed()
+		//		+",R"+src.skills.StraightLines.getRight().getSpeed());
 	}
 	
 	public static EV3LargeRegulatedMotor getLeft() {
@@ -60,5 +60,10 @@ public class StraightLines {
 			right = new EV3LargeRegulatedMotor(MotorPort.D);
 		}
 		return right;
+	}
+	
+	public static void resetMotors() {
+		getLeft().resetTachoCount();
+		getRight().resetTachoCount();
 	}
 }
