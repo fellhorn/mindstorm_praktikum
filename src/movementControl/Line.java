@@ -60,6 +60,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				StraightLines.regulatedForwardDrive(450);
 				//TODO what if the robot does not find the end of line after gap?
 			} else {
+				lineState = LineStates.LINE_LOST_LEFT;
 				searchLine();				
 			}
 			break;
@@ -99,7 +100,7 @@ public class Line extends AbstractInterruptableStateRunner {
 	private void searchLine(){
 		// Get current angle
 		gyro.getAngleMode().fetchSample(rotDegree, 1);
-		
+		// left = positive dir
 		switch (lineState) {
 		case LINE_LOST_LEFT:
 			// Search left first
