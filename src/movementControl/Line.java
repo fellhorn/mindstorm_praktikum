@@ -19,7 +19,9 @@ public class Line extends AbstractInterruptableStateRunner {
 	private boolean assumeGap  = false;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
 	
-	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f; 
+	private static final float SEARCH_ROTATION_TOLERANCE = 0.0f; 
+	private static final int LINE_SPEED = 600;
+	private static final int ROTATION_SPEED = 50;
 
 	
 	
@@ -31,28 +33,35 @@ public class Line extends AbstractInterruptableStateRunner {
 	protected void preLoopActions() {
 		message.clear();
 		message.echo("Following white line.");
-		StraightLines.startEngines(450);
+		StraightLines.startEngines(LINE_SPEED);
 	}
 
 	@Override
 	protected void inLoopActions() {
 		int groundColor = col.getColorID(); 
 		switch (groundColor) {
-		case Color.WHITE:
+		case Color.BLUE:  //TODO check as which color white is seen
+		case Color.WHITE:  
 			//reset state variables to "on line"
+			if(rotating) {
+				StraightLines.stop();
+				StraightLines.resetMotors();
+			}
 			rotating = false;
 			assumeGap = false;
 			lastLossRight  = lastLossRight != turnBack; //change lLR iff robot searched in wrong direction first
 			turnBack = false;
 			adjust = false;
-			StraightLines.regulatedForwardDrive(450);
+			StraightLines.regulatedForwardDrive(LINE_SPEED);
 			//TODO ENHANCEMENT speedup if line was straight for some time
 			break;
 		case Color.BLACK:
+		case Color.BROWN:
+			message.echo("Lost line");
 			if(!assumeGap){
 				searchLine();				
 			} else {
-				StraightLines.regulatedForwardDrive(450);
+				StraightLines.regulatedForwardDrive(LINE_SPEED);
 				//TODO what if the robot does not find the end of line after gap?
 			}
 			break;
@@ -62,7 +71,8 @@ public class Line extends AbstractInterruptableStateRunner {
 		default: 
 			//TODO think of better error case behavior
 			//stop robot if measurement error occurs
-			System.out.println("\n" + groundColor);
+			message.clear();
+			message.echo("Exit on color: " + groundColor);
 			running = false; 
 			break;
 		}
@@ -71,6 +81,8 @@ public class Line extends AbstractInterruptableStateRunner {
 	@Override
 	protected void postLoopActions() {
 		//TODO clear global values in case some were set
+		col.close();
+		gyro.close();
 		StraightLines.stop();
 	}
 	
@@ -84,58 +96,63 @@ public class Line extends AbstractInterruptableStateRunner {
 		if(lastLossRight) {
 			if(!turnBack) {
 				//search for line on the left
-				Curves.smoothSpeededLeftTurn(-1, 450);	
+				message.echo("Turn left");
+				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);	
 				if (rotDegree[0] - rotDegree[1] < -90.0 - SEARCH_ROTATION_TOLERANCE) {
 					turnBack = true;
 					StraightLines.stop();
 				}
 			} else if(turnBack && (rotDegree[0] - rotDegree[1] < 0.0)){
 				//line not found => you can turn back quicker
-				Curves.smoothSpeededRightTurn(-1, 900);	
+				message.echo("Not found, turn back");
+				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);	
 			} else if(turnBack && !adjust){
 				//search for line on the right
-				Curves.smoothSpeededRightTurn(-1, 450);
+				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
 				if (rotDegree[0] - rotDegree[1] > 90.0 + SEARCH_ROTATION_TOLERANCE) {
 					adjust = true;
 					StraightLines.stop();
 				}
 			} else if(adjust && (rotDegree[0] - rotDegree[1] > 0.0)) {
 				//line not found => you can turn back to original position quicker
-				Curves.smoothSpeededLeftTurn(-1, 900);
+				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
 			} else {
 				//no line here => must be gap
 				adjust = false;
 				rotating = false;
 				assumeGap = true;
+				StraightLines.resetMotors();
 			}
 
 		} else {
 			if(!turnBack) {
 				//search for line on the right
-				Curves.smoothSpeededRightTurn(-1, 450);	
+				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);	
 				if (rotDegree[0] - rotDegree[1] > 90.0 + SEARCH_ROTATION_TOLERANCE) {
 					turnBack = true;
 					StraightLines.stop();
 				}
 			} else if(turnBack && (rotDegree[0] - rotDegree[1] > 0.0)){
 				//line not found => you can turn back quicker
-				Curves.smoothSpeededLeftTurn(-1, 900);	
+				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);	
 			} else if(turnBack && !adjust){
 				//search for line on the left
-				Curves.smoothSpeededLeftTurn(-1, 450);
+				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
 				if (rotDegree[0] - rotDegree[1] < -90.0 + SEARCH_ROTATION_TOLERANCE) {
 					adjust = true;
 					StraightLines.stop();
 				}
 			} else if(adjust && (rotDegree[0] - rotDegree[1] < 0.0)) {
 				//line not found => you can turn back to original position quicker
-				Curves.smoothSpeededRightTurn(-1, 900);
+				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
 			} else {
 				//no line here => must be gap
 				adjust = false;
 				rotating = false;
 				assumeGap = true;
+				StraightLines.resetMotors();
 			}
 		}
+		return;
 	}
 }
