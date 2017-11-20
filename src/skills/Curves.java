@@ -12,7 +12,7 @@ public class Curves {
 		StraightLines.getRight().setSpeed(speed);
 		StraightLines.getLeft().setSpeed(Math.abs(smoothness) * speed);
 
-		message.echo("R: " + StraightLines.getRight().getSpeed() + " L:" + StraightLines.getLeft().getSpeed());
+		//message.echo("R: " + StraightLines.getRight().getSpeed() + " L:" + StraightLines.getLeft().getSpeed());
 		StraightLines.getRight().forward();
 		if(smoothness >= 0){
 			StraightLines.getLeft().forward();				
@@ -25,7 +25,7 @@ public class Curves {
 		StraightLines.getLeft().setSpeed(speed);
 		StraightLines.getRight().setSpeed(Math.abs(smoothness) * speed);
 
-		message.echo("R: " + StraightLines.getRight().getSpeed() + " L:" + StraightLines.getLeft().getSpeed());
+		//message.echo("R: " + StraightLines.getRight().getSpeed() + " L:" + StraightLines.getLeft().getSpeed());
 		StraightLines.getLeft().forward();
 		if(smoothness >= 0){
 			StraightLines.getRight().forward();				

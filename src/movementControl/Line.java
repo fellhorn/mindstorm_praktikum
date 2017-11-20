@@ -17,11 +17,23 @@ public class Line extends AbstractInterruptableStateRunner {
 	private boolean turnBack = false;
 	private boolean adjust = false;
 	private boolean assumeGap  = false;
+	private enum LineStates {
+		ON_LINE,
+		TURN_BACK_RIGHT,
+		TURN_BACK_LEFT,
+		SEARCH_LINE_LEFT,
+		SEARCH_LINE_RIGHT,
+		LINE_LOST_RIGHT,
+		LINE_LOST_LEFT,
+		ON_GAP,
+		ERROR
+	} 
+	private LineStates lineState;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
 	
-	private static final float SEARCH_ROTATION_TOLERANCE = 0.0f; 
-	private static final int LINE_SPEED = 600;
-	private static final int ROTATION_SPEED = 50;
+	private static final float SEARCH_ROTATION_TOLERANCE = -10.0f; 
+	private static final int LINE_SPEED = 500;
+	private static final int ROTATION_SPEED = 80;
 
 	
 	
@@ -34,6 +46,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		message.clear();
 		message.echo("Following white line.");
 		StraightLines.startEngines(LINE_SPEED);
+		lineState = LineStates.ON_LINE;
 	}
 
 	@Override
@@ -57,7 +70,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 		case Color.BLACK:
 		case Color.BROWN:
-			message.echo("Lost line");
+			//message.echo("Lost line");
 			if(!assumeGap){
 				searchLine();				
 			} else {
@@ -74,7 +87,12 @@ public class Line extends AbstractInterruptableStateRunner {
 			message.clear();
 			message.echo("Exit on color: " + groundColor);
 			running = false; 
-			break;
+			while(true) {
+				col.close();
+				gyro.close();
+				StraightLines.stop();
+			}
+			//break;
 		}
 	}
 
@@ -96,7 +114,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		if(lastLossRight) {
 			if(!turnBack) {
 				//search for line on the left
-				message.echo("Turn left");
+				//message.echo("Turn left");
 				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);	
 				if (rotDegree[0] - rotDegree[1] < -90.0 - SEARCH_ROTATION_TOLERANCE) {
 					turnBack = true;
@@ -104,7 +122,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				}
 			} else if(turnBack && (rotDegree[0] - rotDegree[1] < 0.0)){
 				//line not found => you can turn back quicker
-				message.echo("Not found, turn back");
+				//message.echo("Not found, turn back");
 				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);	
 			} else if(turnBack && !adjust){
 				//search for line on the right

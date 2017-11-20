@@ -18,8 +18,8 @@ public class StraightLines {
 	}
 
 	public static void startEngines(int speed) {
-		getLeft().setAcceleration(4000);
-		getRight().setAcceleration(4000);
+		getLeft().setAcceleration(1500);
+		getRight().setAcceleration(1500);
 		getLeft().setSpeed(speed);
 		getRight().setSpeed(speed);
 		getLeft().forward();
@@ -43,7 +43,7 @@ public class StraightLines {
 	
 		getLeft().setSpeed(speedRef - diff);
 		getRight().setSpeed(speedRef + diff);
-		message.echo("New Speed");
+		//message.echo("New Speed");
 		//System.out.println("d=" + diff + ",L" + src.skills.StraightLines.getLeft().getSpeed()
 		//		+",R"+src.skills.StraightLines.getRight().getSpeed());
 	}
