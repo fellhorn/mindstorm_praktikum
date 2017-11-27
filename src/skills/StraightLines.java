@@ -16,6 +16,12 @@ public class StraightLines {
 		getLeft().forward();
 		getRight().forward();		
 	}
+	
+	public static void regulatedBackwardDrive(int speedRef) {
+		adjustSpeed(speedRef);
+		getLeft().backward();
+		getRight().backward();
+	}
 
 	public static void startEngines(int speed) {
 		getLeft().setAcceleration(1500);
