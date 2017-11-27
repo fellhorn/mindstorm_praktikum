@@ -66,4 +66,11 @@ public class StraightLines {
 		getLeft().resetTachoCount();
 		getRight().resetTachoCount();
 	}
+	
+	public static void wheelRotation(float times, int speed) {
+		getLeft().setSpeed(speed);
+		getRight().setSpeed(speed);
+		getLeft().rotate((int)(times * 360), true);
+		getRight().rotate((int)(times * 360), false);
+	}
 }
