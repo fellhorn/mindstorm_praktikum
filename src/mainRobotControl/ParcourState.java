@@ -6,5 +6,6 @@ public enum ParcourState {
 	ON_BRIDGE, 
 	SEARCH_COLORED_AREA,
 	RUN_AD_1,
-	TEST
+	TEST,
+	MAZE
 }

@@ -7,8 +7,8 @@ public class Test extends AbstractInterruptableStateRunner {
 	@Override
 	protected void preLoopActions() {
 		// TODO Auto-generated method stub
-		//src.skills.Sensors.calibrateSonic(0.3f);
-		src.skills.StraightLines.wheelRotation(0.25f, 400);
+		src.skills.Sensors.calibrateSonic(0.3f);
+		//src.skills.StraightLines.wheelRotation(0.25f, 400);
 	}
 
 	@Override

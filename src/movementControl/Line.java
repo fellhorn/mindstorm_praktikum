@@ -1,17 +1,24 @@
 package src.movementControl;
 import lejos.utility.DebugMessages;
+
+import com.sun.corba.se.spi.orbutil.fsm.State;
+
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
+import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 import src.mainRobotControl.AbstractInterruptableStateRunner;
+import src.mainRobotControl.ParcourState;
+import src.mainRobotControl.StateMachine;
 import src.skills.*;
 
 public class Line extends AbstractInterruptableStateRunner {
 	
 	private DebugMessages message = new DebugMessages(1);
-	private EV3ColorSensor col = new EV3ColorSensor(SensorPort.S2);  
-	private EV3GyroSensor gyro = new EV3GyroSensor(SensorPort.S1);
+	private EV3ColorSensor col;  
+	private EV3GyroSensor gyro;
+	private EV3UltrasonicSensor sonic;
 	private enum LineStates {
 		ON_LINE_LAST_LEFT,
 		ON_LINE_LAST_RIGHT,
@@ -30,7 +37,6 @@ public class Line extends AbstractInterruptableStateRunner {
 		ERROR
 	} 
 	private LineStates lineState;
-	//private lejos.utility.Stopwatch sw;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
 	
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f; 
@@ -47,9 +53,12 @@ public class Line extends AbstractInterruptableStateRunner {
 	protected void preLoopActions() {
 		message.clear();
 		message.echo("Following white line.");
+		col = Sensors.getColor();
+		gyro = Sensors.getGyro();
+		//sonic = Sensors.getSonic();
+		//Sensors.calibrateSonic(0.3f);
 		StraightLines.startEngines(LINE_SPEED);
 		lineState = LineStates.ON_LINE_LAST_RIGHT;
-		//sw = new lejos.utility.Stopwatch();
 	}
 
 	@Override
@@ -83,6 +92,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 		case Color.RED:
 			//TODO change to next state
+			running = false;
 			break;
 		default: 
 			//TODO think of better error case behavior
@@ -99,9 +109,9 @@ public class Line extends AbstractInterruptableStateRunner {
 	@Override
 	protected void postLoopActions() {
 		//TODO clear global values in case some were set
-		col.close();
-		gyro.close();
-		StraightLines.stop();
+		sonic.disable();
+		StateMachine.getInstance().setState(ParcourState.MAZE);
+		StraightLines.regulatedForwardDrive(12000);
 	}
 	
 	private void searchLine(){

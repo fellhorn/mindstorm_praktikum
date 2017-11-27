@@ -44,6 +44,7 @@ public class StateMachine {
 		case ON_BRIDGE: startBridgeState(previousState); break;
 		case RUN_AD_1: startWalkingState(previousState); break;
 		case TEST: startTestingState(previousState); break;
+		case MAZE: break;
 		default:
 			def.clear();
 			def.echo("This state is currently not handled.");
