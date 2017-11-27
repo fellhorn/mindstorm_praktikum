@@ -88,7 +88,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 		case Color.BLACK:
 		case Color.BROWN:
-				searchLine();
+			searchLine();
 			break;
 		case Color.RED:
 			//TODO change to next state
@@ -273,5 +273,4 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 			}
 	}
-	
 }
