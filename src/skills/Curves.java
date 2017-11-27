@@ -1,21 +1,36 @@
 package src.skills;
 
-import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.port.MotorPort;
+import lejos.utility.DebugMessages;
 
 public class Curves {
 	
-	private static EV3LargeRegulatedMotor left = new EV3LargeRegulatedMotor(MotorPort.A);
-	private static EV3LargeRegulatedMotor right = new EV3LargeRegulatedMotor(MotorPort.D);
 
+	private static DebugMessages message = new DebugMessages(4);
+	
+	
 	public static void smoothSpeededRightTurn(float smoothness, float speed) {
-		right.setSpeed(speed);
-		left.setSpeed(smoothness * speed);
-		right.forward();
-		left.forward();	
+		StraightLines.getRight().setSpeed(speed);
+		StraightLines.getLeft().setSpeed(Math.abs(smoothness) * speed);
+
+		//message.echo("R: " + StraightLines.getRight().getSpeed() + " L:" + StraightLines.getLeft().getSpeed());
+		StraightLines.getRight().forward();
+		if(smoothness >= 0){
+			StraightLines.getLeft().forward();				
+		} else {
+			StraightLines.getLeft().backward();
+		}
 	}
 
 	public static void smoothSpeededLeftTurn(float smoothness, float speed) {
-		smoothSpeededRightTurn((1.0f / smoothness), (speed * smoothness));		
+		StraightLines.getLeft().setSpeed(speed);
+		StraightLines.getRight().setSpeed(Math.abs(smoothness) * speed);
+
+		//message.echo("R: " + StraightLines.getRight().getSpeed() + " L:" + StraightLines.getLeft().getSpeed());
+		StraightLines.getLeft().forward();
+		if(smoothness >= 0){
+			StraightLines.getRight().forward();				
+		} else {
+			StraightLines.getRight().backward();
+		}
 	}
 }

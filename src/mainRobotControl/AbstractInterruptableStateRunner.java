@@ -36,7 +36,6 @@ public abstract class AbstractInterruptableStateRunner {
 		preLoopActions();
 		while(running) {
 			inLoopActions();
-			Delay.msDelay(10);
 			
 		}
 		postLoopActions();
