@@ -1,6 +1,6 @@
-package src.movementControl;
+package movementControl;
 import lejos.utility.DebugMessages;
-import src.mainRobotControl.AbstractInterruptableStateRunner;
+import mainRobotControl.AbstractInterruptableStateRunner;
 
 public class Bridge extends AbstractInterruptableStateRunner {
 	

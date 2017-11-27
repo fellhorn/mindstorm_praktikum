@@ -1,4 +1,4 @@
-package src.mainRobotControl;
+package mainRobotControl;
 
 public enum ParcourState {
 	IDLE,

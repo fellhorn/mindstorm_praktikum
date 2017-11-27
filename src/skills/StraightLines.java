@@ -1,4 +1,4 @@
-package src.skills;
+package skills;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;

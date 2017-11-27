@@ -1,10 +1,10 @@
-package src.mainRobotControl;
-
+package mainRobotControl;
 
 import lejos.hardware.Button;
 import lejos.hardware.Key;
 import lejos.hardware.KeyListener;
-import src.view.StateSelector;
+
+import view.StateSelector;
 
 
 public class Main {

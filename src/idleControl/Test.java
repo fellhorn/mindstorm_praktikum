@@ -1,6 +1,6 @@
-package src.idleControl;
+package idleControl;
 
-import src.mainRobotControl.AbstractInterruptableStateRunner;
+import mainRobotControl.AbstractInterruptableStateRunner;
 
 public class Test extends AbstractInterruptableStateRunner {
 
@@ -8,7 +8,7 @@ public class Test extends AbstractInterruptableStateRunner {
 	protected void preLoopActions() {
 		// TODO Auto-generated method stub
 		//src.skills.Sensors.calibrateSonic(0.3f);
-		src.skills.StraightLines.wheelRotation(0.25f, 400);
+		skills.StraightLines.wheelRotation(0.25f, 400);
 	}
 
 	@Override

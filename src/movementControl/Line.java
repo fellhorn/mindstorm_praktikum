@@ -1,11 +1,12 @@
-package src.movementControl;
+package movementControl;
 import lejos.utility.DebugMessages;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.robotics.Color;
-import src.mainRobotControl.AbstractInterruptableStateRunner;
-import src.skills.*;
+
+import mainRobotControl.AbstractInterruptableStateRunner;
+import skills.*;
 
 public class Line extends AbstractInterruptableStateRunner {
 
@@ -267,6 +268,8 @@ public class Line extends AbstractInterruptableStateRunner {
 
 		case ERROR:
 			break;
+			}
+	}
 	private float distance(float a, float b) {
 		return a < b ? b-a : a-b;
 	}

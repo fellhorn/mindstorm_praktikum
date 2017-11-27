@@ -1,8 +1,9 @@
-package src.movementControl;
+package movementControl;
 
+import skills.StraightLines;
+import mainRobotControl.AbstractInterruptableStateRunner;
 
 import lejos.utility.DebugMessages;
-import src.mainRobotControl.AbstractInterruptableStateRunner;
 
 public class Walk extends AbstractInterruptableStateRunner {
 
@@ -11,8 +12,8 @@ public class Walk extends AbstractInterruptableStateRunner {
 
 	@Override
 	protected void preLoopActions() {
-		src.skills.StraightLines.resetMotors();
-		src.skills.StraightLines.startEngines(400);
+		StraightLines.resetMotors();
+		StraightLines.startEngines(400);
 
 		message.clear();
 		System.out.println("Starting Engine");
@@ -22,14 +23,14 @@ public class Walk extends AbstractInterruptableStateRunner {
 
 	@Override
 	protected void inLoopActions() {
-		src.skills.StraightLines.regulatedForwardDrive(400);
+		StraightLines.regulatedForwardDrive(400);
 		return;
 	}
 
 	@Override
 	protected void postLoopActions() {
-		src.skills.StraightLines.resetMotors();
-		src.skills.StraightLines.stop();
+		StraightLines.resetMotors();
+		StraightLines.stop();
 		return;
 	}
 }

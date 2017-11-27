@@ -1,6 +1,6 @@
-package src.idleControl;
+package idleControl;
 import lejos.utility.DebugMessages;
-import src.mainRobotControl.AbstractInterruptableStateRunner;
+import mainRobotControl.AbstractInterruptableStateRunner;
 
 public class Idle extends AbstractInterruptableStateRunner {
 	

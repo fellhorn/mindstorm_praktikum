@@ -1,8 +1,8 @@
-package src.view;
+package view;
 import lejos.utility.TextMenu;
 import java.util.Arrays;
 
-import src.mainRobotControl.ParcourState;;
+import mainRobotControl.ParcourState;;
 
 public class StateSelector {
 	private static final int TOP_ROW = 1;
