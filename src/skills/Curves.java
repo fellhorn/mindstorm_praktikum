@@ -1,4 +1,4 @@
-package src.skills;
+package skills;
 
 import lejos.utility.DebugMessages;
 

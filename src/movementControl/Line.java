@@ -1,4 +1,4 @@
-package src.movementControl;
+package movementControl;
 import lejos.utility.DebugMessages;
 
 import com.sun.corba.se.spi.orbutil.fsm.State;
@@ -8,17 +8,20 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
-import src.mainRobotControl.AbstractInterruptableStateRunner;
-import src.mainRobotControl.ParcourState;
-import src.mainRobotControl.StateMachine;
-import src.skills.*;
+
+import mainRobotControl.AbstractInterruptableStateRunner;
+import mainRobotControl.ParcourState;
+import mainRobotControl.StateMachine;
+import skills.*;
 
 public class Line extends AbstractInterruptableStateRunner {
-	
+
 	private DebugMessages message = new DebugMessages(1);
+
 	private EV3ColorSensor col;  
 	private EV3GyroSensor gyro;
 	private EV3UltrasonicSensor sonic;
+
 	private enum LineStates {
 		ON_LINE_LAST_LEFT,
 		ON_LINE_LAST_RIGHT,
@@ -35,18 +38,18 @@ public class Line extends AbstractInterruptableStateRunner {
 		ON_GAP_LAST_LEFT,
 		ON_GAP_LAST_RIGHT,
 		ERROR
-	} 
+	}
 	private LineStates lineState;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
-	
-	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f; 
+
+	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
 	private static final int LINE_SPEED = 600;
 	private static final int ROTATION_SPEED = 60;
 
-	
-	
+
+
 	/**
-	 * Starts motors to run straight with ~55% speed. </br></br> 
+	 * Starts motors to run straight with ~55% speed. </br></br>
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -63,18 +66,18 @@ public class Line extends AbstractInterruptableStateRunner {
 
 	@Override
 	protected void inLoopActions() {
-		int groundColor = col.getColorID(); 
+		int groundColor = col.getColorID();
 		switch (groundColor) {
 		case Color.BLUE:  //TODO check as which color white is seen
-		case Color.WHITE:  
+		case Color.WHITE:
 			//reset state to ON_LINE
 			if((lineState != LineStates.ON_LINE_LAST_LEFT) && (lineState != LineStates.ON_LINE_LAST_RIGHT)) {
 				StraightLines.stop();
 				lejos.utility.Delay.msDelay(5);
 				StraightLines.resetMotors();
-				if((lineState == LineStates.TURN_BACK_LAST_LEFT) 
+				if((lineState == LineStates.TURN_BACK_LAST_LEFT)
 						|| (lineState == LineStates.SEARCH_LINE_LAST_RIGHT)
-						|| (lineState == LineStates.TURN_BACK_SMALL_LAST_LEFT) 
+						|| (lineState == LineStates.TURN_BACK_SMALL_LAST_LEFT)
 						|| (lineState == LineStates.SEARCH_LINE_SMALL_LAST_RIGHT)
 						|| (lineState == LineStates.ON_GAP_LAST_RIGHT)) {
 					lineState = LineStates.ON_LINE_LAST_RIGHT;
@@ -87,19 +90,18 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 		case Color.BLACK:
 		case Color.BROWN:
-			//message.echo("Lost line");
-			searchLine();				
+				searchLine();
 			break;
 		case Color.RED:
 			//TODO change to next state
 			running = false;
 			break;
-		default: 
+		default:
 			//TODO think of better error case behavior
 			//stop robot if measurement error occurs
 			message.clear();
-			message.echo("Exit on color: " + groundColor);	
-			StraightLines.stop();	
+			message.echo("Exit on color: " + groundColor);
+			StraightLines.stop();
 			break;
 		}
 		//System.out.println(1000.0 / sw.elapsed());
@@ -113,7 +115,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		StateMachine.getInstance().setState(ParcourState.MAZE);
 		StraightLines.regulatedForwardDrive(12000);
 	}
-	
+
 	private void searchLine(){
 		//Just lost line: get initial rotation position
 		switch(lineState) {
@@ -121,38 +123,38 @@ public class Line extends AbstractInterruptableStateRunner {
 			gyro.getAngleMode().fetchSample(rotDegree, 0);
 			lineState = LineStates.SEARCH_LINE_SMALL_LAST_LEFT;
 			break;
-			
+
 		case ON_LINE_LAST_RIGHT:
 			gyro.getAngleMode().fetchSample(rotDegree, 0);
 			lineState = LineStates.SEARCH_LINE_SMALL_LAST_RIGHT;
 			break;
-			
-			
+
+
 		case SEARCH_LINE_SMALL_LAST_LEFT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			//search for line on the right
-			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);	
+			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
 			if (rotDegree[0] - rotDegree[1] > 25.0 - SEARCH_ROTATION_TOLERANCE) {
 				lineState = LineStates.TURN_BACK_SMALL_LAST_LEFT;
 			}
 			break;
-			
+
 		case SEARCH_LINE_SMALL_LAST_RIGHT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			//search for line on the left
 			//message.echo("Turn left");
-			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);	
+			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
 			if (rotDegree[0] - rotDegree[1] < -25.0 + SEARCH_ROTATION_TOLERANCE) {
 				lineState = LineStates.TURN_BACK_SMALL_LAST_RIGHT;
 			}
 			break;
-			
-			
+
+
 		case TURN_BACK_SMALL_LAST_LEFT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			if(rotDegree[0] - rotDegree[1] > 5.0){
 				//line not found => you can turn back quicker
-				Curves.smoothSpeededLeftTurn(-1, 2*ROTATION_SPEED);	
+				Curves.smoothSpeededLeftTurn(-1, 2*ROTATION_SPEED);
 			} else {
 				//search for line on the left
 				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
@@ -160,15 +162,15 @@ public class Line extends AbstractInterruptableStateRunner {
 					lineState = LineStates.SEARCH_LINE_LAST_LEFT;
 				}
 			}
-			
+
 			break;
-			
+
 		case TURN_BACK_SMALL_LAST_RIGHT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			if(rotDegree[0] - rotDegree[1] < -5.0){
 				//line not found => you can turn back quicker
 				//message.echo("Not found, turn back");
-				Curves.smoothSpeededRightTurn(-1, 2*ROTATION_SPEED);	
+				Curves.smoothSpeededRightTurn(-1, 2*ROTATION_SPEED);
 			} else {
 				//search for line on the right
 				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
@@ -177,33 +179,33 @@ public class Line extends AbstractInterruptableStateRunner {
 				}
 			}
 			break;
-			
-			
+
+
 		case SEARCH_LINE_LAST_LEFT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			//search for line on the right
-			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);	
+			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
 			if (rotDegree[0] - rotDegree[1] > 90.0 - SEARCH_ROTATION_TOLERANCE) {
 				lineState = LineStates.TURN_BACK_LAST_LEFT;
 			}
 			break;
-			
+
 		case SEARCH_LINE_LAST_RIGHT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			//search for line on the left
 			//message.echo("Turn left");
-			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);	
+			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
 			if (rotDegree[0] - rotDegree[1] < -90.0 + SEARCH_ROTATION_TOLERANCE) {
 				lineState = LineStates.TURN_BACK_LAST_RIGHT;
 			}
 			break;
-			
-			
+
+
 		case TURN_BACK_LAST_LEFT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			if(rotDegree[0] - rotDegree[1] > 5.0){
 				//line not found => you can turn back quicker
-				Curves.smoothSpeededLeftTurn(-1, 2*ROTATION_SPEED);	
+				Curves.smoothSpeededLeftTurn(-1, 2*ROTATION_SPEED);
 			} else {
 				//search for line on the left
 				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
@@ -211,15 +213,15 @@ public class Line extends AbstractInterruptableStateRunner {
 					lineState = LineStates.TO_STRAIGHT_LAST_LEFT;
 				}
 			}
-			
+
 			break;
-			
+
 		case TURN_BACK_LAST_RIGHT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			if(rotDegree[0] - rotDegree[1] < -5.0){
 				//line not found => you can turn back quicker
 				//message.echo("Not found, turn back");
-				Curves.smoothSpeededRightTurn(-1, 2*ROTATION_SPEED);	
+				Curves.smoothSpeededRightTurn(-1, 2*ROTATION_SPEED);
 			} else {
 				//search for line on the right
 				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
@@ -228,8 +230,8 @@ public class Line extends AbstractInterruptableStateRunner {
 				}
 			}
 			break;
-			
-			
+
+
 		case TO_STRAIGHT_LAST_LEFT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			if(rotDegree[0] - rotDegree[1] < -5.0) {
@@ -243,7 +245,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				StraightLines.resetMotors();
 			}
 			break;
-			
+
 		case TO_STRAIGHT_LAST_RIGHT:
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			if(rotDegree[0] - rotDegree[1] > 5.0) {
@@ -257,8 +259,8 @@ public class Line extends AbstractInterruptableStateRunner {
 				StraightLines.resetMotors();
 			}
 			break;
-			
-			
+
+
 		case ON_GAP_LAST_LEFT:
 			StraightLines.wheelRotation(0.5f, LINE_SPEED);
 			lineState = LineStates.SEARCH_LINE_LAST_LEFT;
@@ -267,10 +269,11 @@ public class Line extends AbstractInterruptableStateRunner {
 			lineState = LineStates.SEARCH_LINE_LAST_RIGHT;
 			//TODO what if the robot does not find the end of line after gap?
 			break;
-			
-			
+
+
 		case ERROR:
 			break;
-		}
+			}
 	}
+	
 }

@@ -1,4 +1,4 @@
-package src.mainRobotControl;
+package mainRobotControl;
 
 import lejos.utility.DebugMessages;
 
@@ -59,27 +59,27 @@ public class StateMachine {
 	}
 	
 	private void startIdleState(ParcourState previousState) {
-		currentController = new src.idleControl.Idle();
+		currentController = new idleControl.Idle();
 		currentController.run();
 	}
 	
 	private void startLineState(ParcourState previousState) {
-		currentController = new src.movementControl.Line();
+		currentController = new movementControl.Line();
 		currentController.run();
 	}
 	
 	private void startBridgeState(ParcourState previousState) {
-		currentController = new src.movementControl.Bridge();
+		currentController = new movementControl.Bridge();
 		currentController.run();
 	}
 	
 	private void startWalkingState(ParcourState previousState) {
-		currentController = new src.movementControl.Walk();
+		currentController = new movementControl.Walk();
 		currentController.run();
 	}
 	
 	private void startTestingState(ParcourState previousState) {
-		currentController = new src.idleControl.Test();
+		currentController = new idleControl.Test();
 		currentController.run();
 	}
 	
