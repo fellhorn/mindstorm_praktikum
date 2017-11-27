@@ -17,7 +17,28 @@ public class Sensors {
 	private static EV3GyroSensor gyro;
 	private static EV3ColorSensor col;
 	private static EV3MediumRegulatedMotor motor;
+	private static final int SONIC_MOVEMENT_ANGLE = 900;
+	private static enum SonicStates {
+		UP,
+		DOWN
+	}
+	private static SonicStates sonicState = SonicStates.UP;
 	
+	public static void sonicDown() {
+		// Forward = up
+		// Backward = down
+		if (sonicState == SonicStates.UP) {
+			getMedMotor().setSpeed(300);
+			getMedMotor().rotate(SONIC_MOVEMENT_ANGLE, true);
+		}
+	}
+	
+	public static void sonicUp() {
+		if (sonicState == SonicStates.DOWN) {
+			getMedMotor().setSpeed(300);
+			getMedMotor().rotate(SONIC_MOVEMENT_ANGLE, true);
+		}
+	}
 
 	/**
 	 * Uses small motor to move ultrasonic Sensor to measure the desired distance. The motor is set 
