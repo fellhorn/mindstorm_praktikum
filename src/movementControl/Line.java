@@ -1,9 +1,7 @@
 package movementControl;
 import lejos.utility.DebugMessages;
 
-import com.sun.corba.se.spi.orbutil.fsm.State;
 
-import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
