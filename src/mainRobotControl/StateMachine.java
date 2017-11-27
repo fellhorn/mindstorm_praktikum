@@ -43,6 +43,7 @@ public class StateMachine {
 		case LINE_FOLLOWER: startLineState(previousState); break;
 		case ON_BRIDGE: startBridgeState(previousState); break;
 		case RUN_AD_1: startWalkingState(previousState); break;
+		case TEST: startTestingState(previousState); break;
 		default:
 			def.clear();
 			def.echo("This state is currently not handled.");
@@ -73,6 +74,11 @@ public class StateMachine {
 	
 	private void startWalkingState(ParcourState previousState) {
 		currentController = new src.movementControl.Walk();
+		currentController.run();
+	}
+	
+	private void startTestingState(ParcourState previousState) {
+		currentController = new src.idleControl.Test();
 		currentController.run();
 	}
 	
