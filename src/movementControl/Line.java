@@ -80,13 +80,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 		case Color.BLACK:
 		case Color.BROWN:
-			if(lineState == LineStates.ON_GAP){
-				StraightLines.regulatedForwardDrive(450);
-				//TODO what if the robot does not find the end of line after gap?
-			} else {
-				lineState = LineStates.LINE_LOST_LEFT;
-				searchLine();
-			}
+			searchLine();
 			break;
 		case Color.RED:
 			//TODO change to next state
@@ -269,19 +263,5 @@ public class Line extends AbstractInterruptableStateRunner {
 		case ERROR:
 			break;
 			}
-	}
-	private float distance(float a, float b) {
-		return a < b ? b-a : a-b;
-	}
-	private boolean angleGreater90(float a, float b) {
-		return distance(a, b) >= 90 + SEARCH_ROTATION_TOLERANCE;
-	}
-	private boolean changeStateIf90(LineStates lineState) {
-		if (angleGreater90(rotDegree[0], rotDegree[1])) {
-			StraightLines.stop();
-			this.lineState = lineState;
-			return true;
-		}
-		return false;
 	}
 }
