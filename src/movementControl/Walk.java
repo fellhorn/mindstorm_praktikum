@@ -7,7 +7,7 @@ import src.mainRobotControl.AbstractInterruptableStateRunner;
 public class Walk extends AbstractInterruptableStateRunner {
 
 	private DebugMessages message = new DebugMessages(1);
-	
+
 
 	@Override
 	protected void preLoopActions() {
