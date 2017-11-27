@@ -13,7 +13,8 @@ public class Line extends AbstractInterruptableStateRunner {
 	private EV3ColorSensor col = new EV3ColorSensor(SensorPort.S2);  
 	private EV3GyroSensor gyro = new EV3GyroSensor(SensorPort.S1);
 	private enum LineStates {
-		ON_LINE,
+		ON_LINE_LEFT,
+		ON_LINE_RIGHT,
 		TURN_BACK_RIGHT,
 		TURN_BACK_LEFT,
 		SEARCH_LINE_LEFT,
@@ -40,7 +41,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		message.clear();
 		message.echo("Following white line.");
 		StraightLines.startEngines(450);
-		lineState = LineStates.ON_LINE;
+		lineState = LineStates.ON_LINE_LEFT;
 	}
 
 	@Override
@@ -50,7 +51,8 @@ public class Line extends AbstractInterruptableStateRunner {
 		case Color.WHITE:
 		case Color.BLUE:
 			//reset state variables to "on line"
-			lineState = LineStates.ON_LINE;
+			//lineState = LineStates.ON_LINE; // replace with searchline()
+			followLine();
 			StraightLines.regulatedForwardDrive(450);
 			//TODO ENHANCEMENT speedup if line was straight for some time
 			break;
@@ -61,7 +63,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				//TODO what if the robot does not find the end of line after gap?
 			} else {
 				lineState = LineStates.LINE_LOST_LEFT;
-				searchLine();				
+				followLine();				
 			}
 			break;
 		case Color.RED:
@@ -97,7 +99,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		return false;
 	}
 	
-	private void searchLine(){
+	private void followLine(){
 		// Get current angle
 		gyro.getAngleMode().fetchSample(rotDegree, 1);
 		// left = positive dir
@@ -136,8 +138,9 @@ public class Line extends AbstractInterruptableStateRunner {
 			}
 			Curves.smoothSpeededLeftTurn(-1, DEFAULT_CURVE_SPEED);
 			break;
-		case ON_LINE:
+		case ON_LINE_LEFT:
 			StraightLines.regulatedForwardDrive(450);
+			// TODO: on_line_right state
 			break;
 		case ON_GAP:
 			break;
