@@ -44,7 +44,7 @@ public class StateMachine {
 		case ON_BRIDGE: startBridgeState(previousState); break;
 		case RUN_AD_1: startWalkingState(previousState); break;
 		case TEST: startTestingState(previousState); break;
-		case MAZE: break;
+		case MAZE: startMazeState(previousState); break;
 		default:
 			def.clear();
 			def.echo("This state is currently not handled.");
@@ -80,6 +80,11 @@ public class StateMachine {
 	
 	private void startTestingState(ParcourState previousState) {
 		currentController = new idleControl.Test();
+		currentController.run();
+	}
+	
+	private void startMazeState(ParcourState previousState) {
+		currentController = new movementControl.Maze();
 		currentController.run();
 	}
 	

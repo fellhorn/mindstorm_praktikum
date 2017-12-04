@@ -20,7 +20,7 @@ public class Line extends AbstractInterruptableStateRunner {
 	private EV3GyroSensor gyro;
 	private EV3UltrasonicSensor sonic;
 
-	private enum LineStates {
+	public enum LineStates {
 		ON_LINE_LAST_LEFT,
 		ON_LINE_LAST_RIGHT,
 		SEARCH_LINE_LAST_LEFT,
