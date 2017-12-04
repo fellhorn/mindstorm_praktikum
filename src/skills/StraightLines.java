@@ -24,8 +24,8 @@ public class StraightLines {
 	}
 
 	public static void startEngines(int speed) {
-		getLeft().setAcceleration(1500);
-		getRight().setAcceleration(1500);
+		getLeft().setAcceleration(1000);
+		getRight().setAcceleration(1000);
 		getLeft().setSpeed(speed);
 		getRight().setSpeed(speed);
 		getLeft().forward();
@@ -73,6 +73,8 @@ public class StraightLines {
 		getRight().resetTachoCount();
 	}
 	
+	
+	//one wheel rotation is about 17.5 cm
 	public static void wheelRotation(float times, int speed) {
 		getLeft().setSpeed(speed);
 		getRight().setSpeed(speed);
