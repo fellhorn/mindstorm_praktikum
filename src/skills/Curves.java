@@ -4,9 +4,16 @@ import lejos.utility.DebugMessages;
 
 public class Curves {
 	
+	
 	private static final int TURN_SPEED = 100;
 	private static DebugMessages message = new DebugMessages(1);
 	
+	/**
+	 * Robot performs a right turn by 90 degrees in the current place. The turn speed is constant and fairly slow.
+	 * Turn angle only measured by gyroscope, which is not that accurate.<br>
+	 * Turn is performed completely before method returns.
+	 */
+	//TODO variable turn speed and degrees
 	public static void turnRight90() {
 		float [] sample = {0f,0f};
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 0);
@@ -21,6 +28,12 @@ public class Curves {
 
 	}
 	
+	/**
+	 * Robot performs a left turn by 90 degrees in the current place. The turn speed is constant and fairly slow.
+	 * Turn angle only measured by gyroscope, which is not that accurate.<br>
+	 * Turn is performed completely before method returns.
+	 */
+	//TODO variable turn speed and degrees
 	public static void turnLeft90() {
 		float [] sample = {0f,0f};
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 0);
@@ -34,6 +47,16 @@ public class Curves {
 		//message.echo(sample[0] + ", " + sample[1]);
 	}
 	
+	/**
+	 * Robot starts driving a curve to the right. Speed and curvature can be adjusted. <br>
+	 * Method returns immediately and robot keeps driving the curve.
+	 * @param smoothness Value between 1.0 and -1.0 to adjust curvature <br>
+	 * 			&emsp; -1.0: turn in place (around center of axis)<br>
+	 * 			&emsp; 0.0: turn around left wheel as rotation center<br>
+	 * 			&emsp; >0.0, <1.0: smooth curve with lateral movement<br>
+	 * 			&emsp; 1.0: no turn at all
+	 * @param speed Turn speed, should be ~100
+	 */
 	public static void smoothSpeededRightTurn(float smoothness, float speed) {
 		StraightLines.getLeft().setSpeed(speed);
 		StraightLines.getRight().setSpeed(Math.abs(smoothness) * speed);
@@ -47,6 +70,16 @@ public class Curves {
 		}
 	}
 
+	/**
+	 * Robot starts driving a curve to the left. Speed and curvature can be adjusted. <br>
+	 * Method returns immediately and robot keeps driving the curve.
+	 * @param smoothness Value between 1.0 and -1.0 to adjust curvature <br>
+	 * 			&emsp; -1.0: turn in place (around center of axis)<br>
+	 * 			&emsp; 0.0: turn around right wheel as rotation center<br>
+	 * 			&emsp; >0.0, <1.0: smooth curve with lateral movement<br>
+	 * 			&emsp; 1.0: no turn at all
+	 * @param speed Turn speed, should be ~100
+	 */
 	public static void smoothSpeededLeftTurn(float smoothness, float speed) {
 		StraightLines.getRight().setSpeed(speed);
 		StraightLines.getLeft().setSpeed(Math.abs(smoothness) * speed);

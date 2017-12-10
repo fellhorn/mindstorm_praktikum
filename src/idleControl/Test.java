@@ -1,5 +1,7 @@
 package idleControl;
 
+import Sensor.OwnColorSensor;
+import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
 import lejos.utility.DebugMessages;
@@ -9,9 +11,10 @@ import skills.Sensors;
 
 public class Test extends AbstractInterruptableStateRunner {
 
-	EV3ColorSensor col;
+	//EV3ColorSensor col;
 	int id;
 	DebugMessages message;
+	OwnColorSensor col;
 	@Override
 	protected void preLoopActions() {
 		// TODO Auto-generated method stub
@@ -24,6 +27,7 @@ public class Test extends AbstractInterruptableStateRunner {
 		System.out.println(tr + " " + col.getFloodlight());
 		id = col.getColorID();
 		//message.echo("Color: " +  id);*/
+		col = new OwnColorSensor(SensorPort.S2);
 	}
 
 	@Override
@@ -34,7 +38,8 @@ public class Test extends AbstractInterruptableStateRunner {
 			message.echo("Color: " +  id);
 		
 		}*/
-		Curves.smoothSpeededLeftTurn(0, 300);
+		//Curves.smoothSpeededLeftTurn(0, 300);
+		col.getColorID();
 		
 	}
 

@@ -55,8 +55,6 @@ public class Line extends AbstractInterruptableStateRunner {
 	 */
 	@Override
 	protected void preLoopActions() {
-		message.clear();
-		message.echo("Following white line.");
 		sonic = Sensors.getSonic();
 		Sensors.calibrateSonic(0.25f);
 		col = Sensors.getColor();
@@ -67,7 +65,9 @@ public class Line extends AbstractInterruptableStateRunner {
 
 	@Override
 	protected void inLoopActions() {
-		if (gapCount > 0) {
+		//set to 2 for full course and 0 for testing obstacle only
+		//TODO change to bool that activates ultrasonic => tets quicker
+		if (gapCount > 2) {
 			sonic.getDistanceMode().fetchSample(dist, 0);
 			if (dist[0] < 0.15) {
 				StraightLines.stop();
@@ -276,6 +276,8 @@ public class Line extends AbstractInterruptableStateRunner {
 		case ON_GAP_LAST_LEFT:
 			StraightLines.wheelRotation(0.5f, LINE_SPEED);
 			lineState = LineStates.SEARCH_LINE_LAST_LEFT;
+			break;
+			
 		case ON_GAP_LAST_RIGHT:
 			StraightLines.wheelRotation(0.5f, LINE_SPEED);
 			lineState = LineStates.SEARCH_LINE_LAST_RIGHT;
