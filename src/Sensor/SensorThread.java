@@ -1,5 +1,9 @@
 package Sensor;
 
+
+
+//only copied from templates on ILIAS
+
 public class SensorThread extends Thread {
 
 	private SingleValueSensorWrapper Sgyro;

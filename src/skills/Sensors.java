@@ -44,6 +44,11 @@ public class Sensors {
 		message.echo(sample[0] + " - diff: " + (sample[0] - distance));
 	}
 	
+	/**
+	 * Sensor constructor. Never call Lejos constructor since it does not check if port is already in use 
+	 * by another instance of the same sensor.
+	 * @return Ultrasonic sensor of the Robot.
+	 */
 	public static EV3UltrasonicSensor getSonic() {
 		if (sonic == null) {
 			sonic = new EV3UltrasonicSensor(SensorPort.S3);
@@ -51,6 +56,12 @@ public class Sensors {
 		return sonic;
 	}
 	
+	/**
+	 * Sensor constructor. Never call Lejos constructor since it does not check if port is already in use 
+	 * by another instance of the same sensor.
+	 * <br><b>Currently we don't use a touch sensor.</b>
+	 * @return Touch sensor of the Robot.
+	 */
 	public static EV3TouchSensor getTouch() {
 		if (touch == null) {
 			touch = new EV3TouchSensor(SensorPort.S4);
@@ -58,6 +69,11 @@ public class Sensors {
 		return touch;
 	}
 	
+	/**
+	 * Sensor constructor. Never call Lejos constructor since it does not check if port is already in use 
+	 * by another instance of the same sensor.
+	 * @return Gyro sensor of the Robot.
+	 */
 	public static EV3GyroSensor getGyro() {
 		if (gyro == null) {
 			gyro = new EV3GyroSensor(SensorPort.S1);
@@ -65,6 +81,11 @@ public class Sensors {
 		return gyro;
 	}
 	
+	/**
+	 * Sensor constructor. Never call Lejos constructor since it does not check if port is already in use 
+	 * by another instance of the same sensor.
+	 * @return Color sensor of the Robot.
+	 */
 	public static EV3ColorSensor getColor() {
 		if (col == null) {
 			col = new EV3ColorSensor(SensorPort.S2);
@@ -72,6 +93,11 @@ public class Sensors {
 		return col;
 	}
 	
+	/**
+	 * Motor constructor. Never call Lejos constructor since it does not check if port is already in use 
+	 * by another instance of the same sensor.
+	 * @return Motor to align the ultrasonic sensor of the Robot.
+	 */
 	public static EV3MediumRegulatedMotor getMedMotor() {
 		if (motor == null) {
 			motor = new EV3MediumRegulatedMotor(MotorPort.B);

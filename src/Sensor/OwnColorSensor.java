@@ -5,14 +5,24 @@ import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.robotics.Color;
 import lejos.utility.DebugMessages;
 
+/**
+ * Color sensor that distinguishes white, black, blue, red and no color/air with respect to the colors actually
+ * used in the course.
+ * @author Daniel
+ *
+ */
 public class OwnColorSensor extends EV3ColorSensor {
+
+	DebugMessages mes = new DebugMessages();
 
 	public OwnColorSensor(Port port) {
 		super(port);
 		setCurrentMode("RGB");
 	}
-	DebugMessages mes = new DebugMessages();
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getColorID() {
 		float[] sample = new float[3];

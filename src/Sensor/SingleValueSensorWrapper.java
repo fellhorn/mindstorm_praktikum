@@ -3,6 +3,10 @@ package Sensor;
 import lejos.hardware.sensor.BaseSensor;
 import lejos.hardware.sensor.SensorMode;
 
+
+
+//only copied from templates on ILIAS
+
 public class SingleValueSensorWrapper {
 
 	private SensorMode mode;
