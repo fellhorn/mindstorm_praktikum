@@ -45,6 +45,7 @@ public class StateMachine {
 		case RUN_AD_1: startWalkingState(previousState); break;
 		case TEST: startTestingState(previousState); break;
 		case MAZE: startMazeState(previousState); break;
+		case SEARCH_SPOTS: startSpotState(previousState); break;
 		default:
 			def.clear();
 			def.echo("This state is currently not handled.");
@@ -85,6 +86,11 @@ public class StateMachine {
 	
 	private void startMazeState(ParcourState previousState) {
 		currentController = new movementControl.Maze();
+		currentController.run();
+	}
+	
+	private void startSpotState(ParcourState previousState) {
+		currentController = new movementControl.SpotSearch();
 		currentController.run();
 	}
 	
