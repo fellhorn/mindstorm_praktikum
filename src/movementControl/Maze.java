@@ -17,6 +17,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private EV3ColorSensor col;  
 	private EV3GyroSensor gyro;
+	
+	private FollowLine followLine;
 
 	public enum MazeState {
 		FOLLOW_LINE,
@@ -38,23 +40,15 @@ public class Maze extends AbstractInterruptableStateRunner {
 		message.echo("Finding a way out of the maze.");
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
-		StraightLines.startEngines(LINE_SPEED);
+		followLine = new FollowLine(col, gyro);
 		state = MazeState.FOLLOW_LINE;
+		followLine.preLoopActions();
 	}
 
 	@Override
 	protected void inLoopActions() {
 		int groundColor = col.getColorID();
 		switch (groundColor) {
-		case Color.BLUE:  //TODO check as which color white is seen
-		case Color.WHITE:
-			message.clear();
-			message.echo("white");
-			break;
-		case Color.BLACK:
-		case Color.BROWN:
-			// TODO 
-			break;
 		case Color.RED:
 			message.clear();
 			message.echo("red");
@@ -65,11 +59,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 			this.executeChoice(leftMostChoice);
 			break;
 		default:
-			//TODO think of better error case behavior
-			//stop robot if measurement error occurs
-			message.clear();
-			message.echo("Exit on color: " + groundColor);
-			StraightLines.stop();
+			followLine.inLoopActions();
 			break;
 		}
 		//System.out.println(1000.0 / sw.elapsed());
@@ -77,12 +67,12 @@ public class Maze extends AbstractInterruptableStateRunner {
 	}
 	
 	private void executeChoice(MazeRedPoint.Choice choice) {
-		switch (choice) {
-			case LEFT: message.echo("left"); Curves.turnLeft90(); break;
-			case RIGHT: message.echo("right"); Curves.turnRight90(); break;
-			case BACK: message.echo("back"); Curves.turnLeft90(); Curves.turnLeft90(); break;
-			case STRAIGHT: StraightLines.wheelRotation(5, LINE_SPEED);break;
+		StraightLines.stop();
+		lejos.utility.Delay.msDelay(10);
+		if (choice == MazeRedPoint.Choice.BACK) {
+			Curves.turnLeft90(); Curves.turnLeft90();
 		}
+		StraightLines.startEngines(LINE_SPEED);
 	}
 
 	protected void postLoopActions() {

@@ -37,7 +37,7 @@ public class MazeRedPoint {
 	private static final float SEARCH_ROTATION_TOLERANCE = 0.0f;
 	private static final float SEARCH_ROTATION_TARGET = 90.0f; 
 	private static final int STRAIGHT_SPEED = 100;
-	private static final int STRAIGHT_ROTATIONS = 2;
+	private static final float STRAIGHT_ROTATIONS = 0.2f;
 	private static final int ROTATION_SPEED = 60;
 	private static final float STRAIGHT_ANGLE_TOLERANCE  = 4.0f;
 
@@ -60,6 +60,14 @@ public class MazeRedPoint {
 		}
 		
 		boolean hasStraight;
+		
+		message.echo("searching straight");
+		
+		if (hasStraightOption()) {
+			message.echo("found a straight option");
+			return Choice.STRAIGHT;
+		}
+		message.echo("no straight option");
 				
 		if (hasLeftOption()) {
 			setBack();
@@ -67,18 +75,12 @@ public class MazeRedPoint {
 		}
 		message.echo("no left option");
 		setBack();
-		message.echo("searching straight");
-		
-		if (hasStraightOption()) {
-			return Choice.STRAIGHT;
-		}
-		message.echo("no straight option");
 		
 		if (hasRightOption()) {
-			setBack();
 			return Choice.RIGHT;
 		}
 		message.echo("no right option");
+		setBack();
 		
 		return Choice.BACK;
 		
@@ -93,8 +95,7 @@ public class MazeRedPoint {
 		StraightLines.wheelRotation(STRAIGHT_ROTATIONS, STRAIGHT_SPEED);
 		boolean result = (col.getColorID() == Color.WHITE);
 		StraightLines.stop();
-		// TODO not sure whether we have to set back
-		// StraightLines.wheelRotation(STRAIGHT_ROTATIONS, -STRAIGHT_SPEED);
+		StraightLines.wheelRotation(STRAIGHT_ROTATIONS, -STRAIGHT_SPEED);
 		
 		return result;
 	}
@@ -109,9 +110,9 @@ public class MazeRedPoint {
 
 	private static boolean searchSide(boolean searchRight) {
 		if (searchRight) {
-			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
-		} else {
 			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
+		} else {
+			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
 		}
 		
 		while (true) {
@@ -131,7 +132,7 @@ public class MazeRedPoint {
 		message.echo("setting back");
 		StraightLines.stop();
 		
-		boolean turnRight = (rotDegree[0] - rotDegree[1]) < 0.0f;
+		boolean turnRight = (rotDegree[0] - rotDegree[1]) > 0.0f;
 		
 		if (turnRight) {
 			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
