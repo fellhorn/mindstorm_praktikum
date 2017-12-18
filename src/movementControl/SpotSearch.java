@@ -23,7 +23,7 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 
 	private boolean foundRed = false, foundWhite = false;
 
-	private static SensorThread sensorThread = Sensors.getSensorThread();
+	private static SensorThread sensorThread = new SensorThread();
 
 	@Override
 	protected void preLoopActions() {

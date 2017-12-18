@@ -1,8 +1,7 @@
 package movementControl;
 
 import lejos.utility.DebugMessages;
-
-import lejos.hardware.sensor.EV3ColorSensor;
+import Sensor.OwnColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
@@ -16,7 +15,7 @@ public class Line extends AbstractInterruptableStateRunner {
 
 	private DebugMessages message = new DebugMessages(1);
 
-	private EV3ColorSensor col;
+	private OwnColorSensor col;
 	private EV3GyroSensor gyro;
 	private EV3UltrasonicSensor sonic;
 

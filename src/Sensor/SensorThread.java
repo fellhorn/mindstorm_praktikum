@@ -1,5 +1,6 @@
 package Sensor;
 
+import lejos.hardware.sensor.EV3ColorSensor;
 import skills.Sensors;
 
 //only copied from templates on ILIAS
@@ -7,7 +8,7 @@ import skills.Sensors;
 public class SensorThread extends Thread {
 
 	private SingleValueSensorWrapper Sgyro;
-	private OwnColorSensor Scolor;
+	private EV3ColorSensor Scolor;
 	private SingleValueSensorWrapper Sdistance;
 
 	private float gyroAngle, distance;
