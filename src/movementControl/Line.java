@@ -45,8 +45,8 @@ public class Line extends AbstractInterruptableStateRunner {
 	private float[] dist = new float[] { 0.0f };
 
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
-	private static final int LINE_SPEED = 550;
-	private static final int ROTATION_SPEED = 55;
+	private static final int LINE_SPEED = 600;
+	private static final int ROTATION_SPEED = 100;
 
 	/**
 	 * Starts motors to run straight with ~55% speed. </br>
@@ -59,14 +59,14 @@ public class Line extends AbstractInterruptableStateRunner {
 		Sensors.calibrateSonic(0.25f);
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
-		StraightLines.startEngines(LINE_SPEED);
+		StraightLines.regulatedForwardDrive(LINE_SPEED);
 		lineState = LineStates.ON_LINE_LAST_RIGHT;
 	}
 
 	@Override
 	protected void inLoopActions() {
 		//set to 2 for full course and 0 for testing obstacle only
-		//TODO change to bool that activates ultrasonic => tets quicker
+		//TODO change to bool that activates ultrasonic => test quicker
 		if (gapCount > 2) {
 			sonic.getDistanceMode().fetchSample(dist, 0);
 			if (dist[0] < 0.15) {
@@ -97,11 +97,8 @@ public class Line extends AbstractInterruptableStateRunner {
 				} else {
 					lineState = LineStates.ON_LINE_LAST_LEFT;
 				}
-				StraightLines.startEngines(LINE_SPEED);
-			} else {
-				StraightLines.regulatedForwardDrive(LINE_SPEED);
-				// TODO ENHANCEMENT speedup if line was straight for some time
 			}
+			StraightLines.regulatedForwardDrive(LINE_SPEED);
 			break;
 		case Color.BLACK:
 		case Color.BROWN:
@@ -127,7 +124,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		// TODO clear global values in case some were set
 		sonic.disable();
 		StateMachine.getInstance().setState(ParcourState.MAZE);
-		StraightLines.regulatedForwardDrive(12000);
+		message.echo("MAZE");
 	}
 
 	private void searchLine() {

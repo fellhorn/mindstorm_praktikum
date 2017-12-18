@@ -2,12 +2,14 @@ package skills;
 
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.MotorPort;
+import lejos.robotics.RegulatedMotor;
 import lejos.utility.DebugMessages;
 
 public class StraightLines {
 
 	private static EV3LargeRegulatedMotor left;
 	private static EV3LargeRegulatedMotor right;
+	private static final int MOTOR_ACC = 4000;
 	private static DebugMessages message = new DebugMessages(2);
 	
 	/**
@@ -28,30 +30,13 @@ public class StraightLines {
 	}
 
 	/**
-	 * Robot starts driving with given speed. No regulation, only used for start-up before going to regulated drive.
-	 * @param speed Speed to drive
-	 * 
-	 * @deprecated This method can be completely expressed by regulatedForwardDrive and motor constructors that set acceleration. Change ASAP
-	 */
-	public static void startEngines(int speed) {
-		//Acceleration is set quite low to avoid that the robot falls over on starting
-		//maybe this is no longer needed.
-		getLeft().setAcceleration(1000);
-		getRight().setAcceleration(1000);
-		getLeft().setSpeed(speed);
-		getRight().setSpeed(speed);
-		getLeft().forward();
-		getRight().forward();	
-		message.clear();
-		message.echo("Started Motors.");
-	}
-
-	/**
 	 * Stops robot immediately and actively blocks wheels.
 	 */
 	public static void stop() {
+		getLeft().startSynchronization();
 		getLeft().stop();
 		getRight().stop();
+		getLeft().endSynchronization();
 	}
 
 	/**
@@ -81,6 +66,8 @@ public class StraightLines {
 	public static EV3LargeRegulatedMotor getLeft() {
 		if(left == null) {
 			left = new EV3LargeRegulatedMotor(MotorPort.A);
+			left.setAcceleration(MOTOR_ACC);
+			left.synchronizeWith(new RegulatedMotor[] {getRight()});
 		}
 		return left;
 	}
@@ -93,6 +80,7 @@ public class StraightLines {
 	public static EV3LargeRegulatedMotor getRight() {
 		if(right == null) {
 			right = new EV3LargeRegulatedMotor(MotorPort.D);
+			right.setAcceleration(MOTOR_ACC);
 		}
 		return right;
 	}
@@ -101,8 +89,10 @@ public class StraightLines {
 	 * Set the tacho-count of both motors to 0.
 	 */
 	public static void resetMotors() {
+		getLeft().startSynchronization();
 		getLeft().resetTachoCount();
 		getRight().resetTachoCount();
+		getLeft().endSynchronization();
 	}
 	
 	/**

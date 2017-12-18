@@ -38,7 +38,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 		message.echo("Finding a way out of the maze.");
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
-		StraightLines.startEngines(LINE_SPEED);
+		StraightLines.regulatedForwardDrive(LINE_SPEED);
 		state = MazeState.FOLLOW_LINE;
 	}
 

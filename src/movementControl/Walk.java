@@ -13,7 +13,7 @@ public class Walk extends AbstractInterruptableStateRunner {
 	@Override
 	protected void preLoopActions() {
 		StraightLines.resetMotors();
-		StraightLines.startEngines(400);
+		StraightLines.regulatedForwardDrive(400);
 
 		message.clear();
 		System.out.println("Starting Engine");
