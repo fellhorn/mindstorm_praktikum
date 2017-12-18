@@ -13,7 +13,7 @@ import lejos.utility.DebugMessages;
  */
 public class OwnColorSensor extends EV3ColorSensor {
 
-	DebugMessages mes = new DebugMessages();
+	private DebugMessages mes = new DebugMessages();
 
 	public OwnColorSensor(Port port) {
 		super(port);
@@ -35,7 +35,7 @@ public class OwnColorSensor extends EV3ColorSensor {
 			return Color.BLACK;
 		}else if(sample[0]/sample[2] < 0.5){
 			return Color.BLUE;
-		}else if(sample[0]/sample[2] > 4.0){
+		}else if(sample[0]/sample[2] > 8.0){
 				//set to ~8.0 when parcour is fixed
 			return Color.RED;
 		}else{

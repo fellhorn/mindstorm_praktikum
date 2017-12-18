@@ -66,16 +66,16 @@ public class Line extends AbstractInterruptableStateRunner {
 	protected void inLoopActions() {
 		//set to 2 for full course and 0 for testing obstacle only
 		//TODO change to bool that activates ultrasonic => test quicker
-		if (gapCount > 2) {
+		if (gapCount >= 2) {
 			sonic.getDistanceMode().fetchSample(dist, 0);
 			if (dist[0] < 0.15) {
 				StraightLines.stop();
-				Curves.turnLeft90();
+				Curves.turnRight90();
 				StraightLines.wheelRotation(1.5f, LINE_SPEED);
-				Curves.turnRight90();
+				Curves.turnLeft90();
 				StraightLines.wheelRotation(3.0f, LINE_SPEED);
-				Curves.turnRight90();
-				gapCount = 0;
+				Curves.turnLeft90();
+				gapCount = -1;
 				lineState = LineStates.ON_GAP_LAST_LEFT;
 			}
 		}

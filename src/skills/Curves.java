@@ -20,11 +20,10 @@ public class Curves {
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		smoothSpeededRightTurn(-1, TURN_SPEED);
 		
-		while (sample[0] - sample[1] < 75) {
+		while (sample[1] - sample[0] < 84) {
 			Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		}
 		StraightLines.stop();
-		message.echo(sample[0] + ", " + sample[1]);
 
 	}
 	
@@ -39,8 +38,7 @@ public class Curves {
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 0);
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		smoothSpeededLeftTurn(-1, TURN_SPEED);
-		
-		while (sample[1] - sample[0] < 75) {
+		while (sample[0] - sample[1] < 84) {
 			Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		}
 		StraightLines.stop();
