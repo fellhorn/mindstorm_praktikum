@@ -13,7 +13,7 @@ import lejos.utility.DebugMessages;
  */
 public class OwnColorSensor extends EV3ColorSensor {
 
-	DebugMessages mes = new DebugMessages();
+	private DebugMessages mes = new DebugMessages();
 
 	public OwnColorSensor(Port port) {
 		super(port);
@@ -27,23 +27,19 @@ public class OwnColorSensor extends EV3ColorSensor {
 	public int getColorID() {
 		float[] sample = new float[3];
 		fetchSample(sample, 0);
-		mes.clear();
-		mes.echo(Float.toString(sample[0] + sample[1] + sample[2]));
 		if(sample[0] + sample[1] + sample[2] > 0.5){
-			mes.echo("WHITE");
 			return Color.WHITE;			
-		}else if(sample[0] + sample[1] + sample[2] < 0.01) {
-			mes.echo("NONE");
+		} else if(sample[0] + sample[1] + sample[2] < 0.01) {
 			return Color.NONE;
 		}else if(sample[0] + sample[1] + sample[2] < 0.2) {
-			mes.echo("BLACK");
 			return Color.BLACK;
-		}else if(sample[0]/sample[2] < 1){
-			mes.echo("BLUE");
+		}else if(sample[0]/sample[2] < 0.5){
 			return Color.BLUE;
-		}else{
-			mes.echo("RED");
+		}else if(sample[0]/sample[2] > 8.0){
+				//set to ~8.0 when parcour is fixed
 			return Color.RED;
+		}else{
+			return Color.BLACK;
 		}
 	}
 

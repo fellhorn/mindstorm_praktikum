@@ -1,9 +1,9 @@
 package skills;
 
+import Sensor.OwnColorSensor;
 import lejos.hardware.motor.EV3MediumRegulatedMotor;
 import lejos.hardware.port.MotorPort;
 import lejos.hardware.port.SensorPort;
-import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3TouchSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
@@ -15,7 +15,7 @@ public class Sensors {
 	private static EV3UltrasonicSensor sonic;
 	private static EV3TouchSensor touch;
 	private static EV3GyroSensor gyro;
-	private static EV3ColorSensor col;
+	private static OwnColorSensor col;
 	private static EV3MediumRegulatedMotor motor;
 	private static final int SONIC_MOVEMENT_ANGLE = 900;
 	private static enum SonicStates {
@@ -107,9 +107,9 @@ public class Sensors {
 	 * by another instance of the same sensor.
 	 * @return Color sensor of the Robot.
 	 */
-	public static EV3ColorSensor getColor() {
+	public static OwnColorSensor getColor() {
 		if (col == null) {
-			col = new EV3ColorSensor(SensorPort.S2);
+			col = new OwnColorSensor(SensorPort.S2);
 		}
 		return col;
 	}

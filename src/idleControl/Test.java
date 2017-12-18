@@ -12,7 +12,7 @@ import skills.Sensors;
 public class Test extends AbstractInterruptableStateRunner {
 
 	//EV3ColorSensor col;
-	int id;
+	int ticks;
 	DebugMessages message;
 	OwnColorSensor col;
 	@Override
@@ -27,7 +27,8 @@ public class Test extends AbstractInterruptableStateRunner {
 		System.out.println(tr + " " + col.getFloodlight());
 		id = col.getColorID();
 		//message.echo("Color: " +  id);*/
-		col = new OwnColorSensor(SensorPort.S2);
+		//col = new OwnColorSensor(SensorPort.S2);
+		ticks = 0;
 	}
 
 	@Override
@@ -38,8 +39,11 @@ public class Test extends AbstractInterruptableStateRunner {
 			message.echo("Color: " +  id);
 		
 		}*/
-		//Curves.smoothSpeededLeftTurn(0, 300);
-		col.getColorID();
+		//spiral 
+		float smooth = 1.0f - (ticks / 5000.0f);
+		Curves.smoothSpeededLeftTurn(smooth, 300);
+		ticks++;
+		//col.getColorID();
 		
 	}
 

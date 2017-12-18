@@ -1,7 +1,11 @@
 package movementControl;
 
+import Sensor.OwnColorSensor;
 import Sensor.SensorThread;
+import Sensor.SingleValueSensorWrapper;
+import lejos.hardware.Sound;
 import lejos.robotics.Color;
+import lejos.utility.DebugMessages;
 import mainRobotControl.AbstractInterruptableStateRunner;
 import skills.Curves;
 import skills.Sensors;
@@ -17,13 +21,13 @@ import skills.StraightLines;
  */
 public class SpotSearch extends AbstractInterruptableStateRunner {
 
-	private float angle, wallDistance;
-	private static float backoffDistance = 3;
-	private static final float minWallDistance = 0.1f; // In meters
+	private static float backoffDistance = 1;
 
 	private boolean foundRed = false, foundWhite = false;
-
-	private static SensorThread sensorThread = Sensors.getSensorThread();
+	private OwnColorSensor col = Sensors.getColor();
+	DebugMessages mes = new DebugMessages();
+	SingleValueSensorWrapper t;
+	int contacts = 0;
 
 	@Override
 	protected void preLoopActions() {
@@ -32,20 +36,36 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 		// robot is standing in front of the bridge facing the room.
 
 		// Start by driving straight forward
+		t = new SingleValueSensorWrapper(Sensors.getTouch(), "Touch");
 		StraightLines.regulatedForwardDrive(400);
 	}
 
 	private void detectColor() {
-		int id = sensorThread.getColorID();
+		int id = col.getColorID();
 		
 		if (id == Color.RED) {
 			foundRed = true;
+			mes.clear();
+			mes.echo("#############");
+			mes.echo("#############");
+			mes.echo("#############");
+			mes.echo("#############");
+			mes.echo("#############");
+			Sound.beep();
 		} else if (id == Color.WHITE) {
 			foundWhite = true;
+			mes.clear();
+			mes.echo("#############");
+			mes.echo("#############");
+			mes.echo("#############");
+			mes.echo("#############");
+			mes.echo("#############");
+			Sound.buzz();
 		}
 		if (foundRed && foundWhite) {
 			// Success!!
 			running = false;
+			
 		}
 	}
 
@@ -56,30 +76,31 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 	 */
 	@Override
 	protected void inLoopActions() {
-		wallDistance = sensorThread.getDistance();
-		angle = sensorThread.getGyroAngle();
-
-		if (sensorThread.getColorID() != Color.BLACK) {
+		
+		if (col.getColorID() != Color.BLACK) {
 			// In case we found a spot
 			detectColor();
 		}
 
 		// If we are 10cm close to the wall, stop and turn
-		if (wallDistance < minWallDistance) {
-			StraightLines.stop();
-
-			if (angle >= 360) {
+		if (t.getSample() == 1.0) {
+			contacts ++;
+			if (contacts  >= 4) {
 				// Increase back-off distance to shrink circle
-				backoffDistance += 5;
+				backoffDistance ++;
+				contacts = 0;
 			}
-			StraightLines.wheelRotation(backoffDistance, 340);
+			StraightLines.wheelRotation(-0.2f * backoffDistance, 300);
 			Curves.turnLeft90();
+			StraightLines.resetMotors();
 			StraightLines.regulatedForwardDrive(400);
+
 		}
 	}
 
 	@Override
 	protected void postLoopActions() {
 		System.out.println("HAPPY END!");
+		StraightLines.stop();
 	}
 }
