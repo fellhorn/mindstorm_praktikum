@@ -32,12 +32,13 @@ public class RoomController extends RobotController {
 		};		
 	};
 	
-	private int backOffDistance = 35;
+	private int backOffDistance = 37;
 	private int actualDistance = 0;
 	private static Directions backOffDir;
 	
 	private static Directions direction;
 	private float directionDegrees = 0; // direction from start counter-clockwise
+	private boolean blueFound = false, redFound = false;
 	/**
 	 * Constructor for Controller in Labyrinth Parcour
 	 */
@@ -77,6 +78,18 @@ public class RoomController extends RobotController {
 		//center of rotation is one third in, seen from the front
 		//the light sensor is mounted on the center of the front 
 		//the robot has a touchbar mounted on the front
+		if (lightSensorBlueValue > 20) {
+			blueFound = true;
+			System.out.println("Blue found !!");
+		}
+		if (lightSensorRedValue > 20) {
+			redFound = true;
+			System.out.println("Red found !!");
+		}
+		if (redFound && blueFound) {
+			// Stop moving on success
+			motorSpeedLeft = motorSpeedRight = 0;
+		}
 		
 		// Insert Code here
 		switch (direction) {
@@ -121,7 +134,7 @@ public class RoomController extends RobotController {
 			if (directionDegrees < 90) {
 				System.out.println("current degrees: " + directionDegrees);
 	
-				directionDegrees+=2.307691573;
+				directionDegrees+=2.307691574;
 				motorSpeedLeft = 1;
 				motorSpeedRight = -1;
 			} else {
@@ -137,6 +150,7 @@ public class RoomController extends RobotController {
 			System.out.println(backOffDir);
 			break;
 			default:
+				System.out.println("Error: default case!");
 				break;
 		}
 		
