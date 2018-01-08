@@ -21,7 +21,7 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	private OwnColorSensor colorSensor;
 	private static final float MAX_DISTANCE = 0.25f,
 								SUB_INFINITY = 0.90f;
-	private static final int BRIDGE_SPEED = 400;
+	private static int bridgeSpeed = 400;
 	
 	private DebugMessages message = new DebugMessages(5);
 	
@@ -34,7 +34,8 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		colorSensor = Sensors.getColor();
 		
 		// Move ultra-sonic sensor ~90 degrees down
-		Sensors.sonicDown();
+		Sensors.sonicUp();
+		// TODO: bridge speed??
 		
 		message.echo("ON_RAMP_UP");
 		bridgeState = BridgeStates.ON_RAMP_UP;
@@ -65,12 +66,13 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		if (sample[0] > MAX_DISTANCE && sample[0] < SUB_INFINITY) {
 			if (bridgeState == BridgeStates.ON_RAMP_UP) {
 				message.echo("ON_BRIDGE");
-
+				// TODO: set bridge speed
 				backOffAndTurn();
 				bridgeState = BridgeStates.ON_BRIDGE;
 				
 			} else if (bridgeState == BridgeStates.ON_BRIDGE) {
 				message.echo("ON_RAMP_DOWN");
+				// TODO: set bridge speed
 
 				backOffAndTurn();
 				bridgeState = BridgeStates.ON_RAMP_DOWN;
@@ -78,7 +80,7 @@ public class Bridge extends AbstractInterruptableStateRunner {
 				// Damn
 			}
 		} else {
-			StraightLines.regulatedForwardDrive(BRIDGE_SPEED);
+			StraightLines.regulatedForwardDrive(bridgeSpeed);
 		}
 		return;
 	}

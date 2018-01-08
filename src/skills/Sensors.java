@@ -32,14 +32,14 @@ public class Sensors {
 		// Backward = down
 		if (sonicState == SonicStates.UP) {
 			getMedMotor().setSpeed(300);
-			getMedMotor().rotate(-SONIC_MOVEMENT_ANGLE, false);
+			getMedMotor().rotate(-SONIC_MOVEMENT_ANGLE, true);
 		}
 	}
 	
 	public static void sonicUp() {
 		if (sonicState == SonicStates.DOWN) {
 			getMedMotor().setSpeed(300);
-			getMedMotor().rotate(SONIC_MOVEMENT_ANGLE, true);
+			getMedMotor().rotate(SONIC_MOVEMENT_ANGLE, false);
 		}
 	}
 
