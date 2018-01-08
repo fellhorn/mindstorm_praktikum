@@ -104,7 +104,8 @@ public class RoomController extends RobotController {
 			motorSpeedLeft = 1;
 			motorSpeedRight = 1;
 			if (touch) {
-		
+				// Increase backOff distance
+				backOffDistance += 10;
 				backOff(Directions.SOUTH);
 			}
 			break;
