@@ -33,7 +33,6 @@ public class MazeRedPoint {
 	
 	private static float[] rotDegree = new float[] {0.0f, 0.0f};
 
-	private static final int DEFAULT_CURVE_SPEED = 10;
 	private static final float SEARCH_ROTATION_TOLERANCE = 0.0f;
 	private static final float SEARCH_ROTATION_TARGET = 90.0f; 
 	private static final int STRAIGHT_SPEED = 100;

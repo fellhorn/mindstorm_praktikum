@@ -54,7 +54,7 @@ public class FollowLine {
 	}
 	
 	public void preLoopActions() {
-		StraightLines.startEngines(LINE_SPEED);
+		StraightLines.regulatedForwardDrive(LINE_SPEED);
 		lineState = LineStates.ON_LINE_LAST_RIGHT;
 	}
 
@@ -75,7 +75,7 @@ public class FollowLine {
 				} else {
 					lineState = LineStates.ON_LINE_LAST_LEFT;
 				}
-				StraightLines.startEngines(LINE_SPEED);
+				StraightLines.regulatedForwardDrive(LINE_SPEED);
 			} else {
 				StraightLines.regulatedForwardDrive(LINE_SPEED);
 				// TODO ENHANCEMENT speedup if line was straight for some time
