@@ -27,8 +27,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 	private MazeState state;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
 	
-	private static final int LINE_SPEED = 100;
-	private static final int ROTATION_SPEED = 60;
+	private static final int LINE_SPEED = 30;
+	private static final int ROTATION_SPEED = 30;
 
 	/**
 	 * Starts motors to run straight with ~55% speed. </br></br>
@@ -52,15 +52,17 @@ public class Maze extends AbstractInterruptableStateRunner {
 		int groundColor = col.getColorID();
 		switch (groundColor) {
 		case Color.RED:
-			message.clear();
-			message.echo("red");
+			// message.clear();
+			message.echo("is on red");
 			StraightLines.stop();
 			this.state = MazeState.CROSSING;
 			lejos.utility.Delay.msDelay(5);
-			MazeRedPoint.Choice leftMostChoice = MazeRedPoint.getLeftMostAvailableChoice();
-			this.executeChoice(leftMostChoice);
+			message.echo("checking available choices");
+			MazeRedPoint.Choice rightMostChoice = MazeRedPoint.getRightMostAvailableChoice();
+			this.executeChoice(rightMostChoice);
 			break;
 		default:
+			message.echo("follow line mode");
 			followLine.inLoopActions();
 			break;
 		}
@@ -69,15 +71,21 @@ public class Maze extends AbstractInterruptableStateRunner {
 	}
 	
 	private void executeChoice(MazeRedPoint.Choice choice) {
+		message.echo("Executing a choice");
 		StraightLines.stop();
 		lejos.utility.Delay.msDelay(10);
 		if (choice == MazeRedPoint.Choice.BACK) {
 			Curves.turnLeft90(); Curves.turnLeft90();
 		}
+		StraightLines.resetMotors();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
 	}
 
 	protected void postLoopActions() {
-		StraightLines.regulatedForwardDrive(12000);
+		message.echo("Post loop action");
+		message.echo("Post loop action");
+		message.echo("Post loop action");
+		message.echo("Post loop action");
+		StraightLines.regulatedForwardDrive(10);
 	}
 }
