@@ -1,6 +1,5 @@
 package movementControl;
 import Sensor.OwnColorSensor;
-import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 import lejos.utility.DebugMessages;
@@ -50,9 +49,6 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		
 		// Reset counters
 		StraightLines.resetMotors();
-		
-		// Continue driving forward
-		// StraightLines.regulatedForwardDrive(BRIDGE_SPEED);
 	}
 
 	@Override
@@ -90,5 +86,8 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	@Override
 	protected void postLoopActions() {
 		message.echo("BRIDGE_PASSED!");
+		
+		// The ultrasonic sensor is not used anymore
+		Sensors.sonicDown();
 	}
 }
