@@ -33,11 +33,11 @@ public class MazeRedPoint {
 	
 	private static float[] rotDegree = new float[] {0.0f, 0.0f};
 
-	private static final float SEARCH_ROTATION_TOLERANCE = 0.0f;
+	private static final float SEARCH_ROTATION_TOLERANCE = 7.0f;
 	private static final float SEARCH_ROTATION_TARGET = 90.0f; 
-	private static final int STRAIGHT_SPEED = 100;
+	private static final int STRAIGHT_SPEED = 30;
 	private static final float STRAIGHT_ROTATIONS = 0.2f;
-	private static final int ROTATION_SPEED = 60;
+	private static final int ROTATION_SPEED = 20;
 	private static final float STRAIGHT_ANGLE_TOLERANCE  = 4.0f;
 
 
@@ -62,23 +62,30 @@ public class MazeRedPoint {
 		
 		message.echo("searching straight");
 		
-		if (hasStraightOption()) {
+		
+		hasStraight = hasStraightOption();
+		if (hasStraight) {
 			message.echo("found a straight option");
-			return Choice.STRAIGHT;
 		}
-		message.echo("no straight option");
-				
-		if (hasLeftOption()) {
-			setBack();
-			return Choice.LEFT;
-		}
-		message.echo("no left option");
-		setBack();
+		
+		message.echo("Searching right");
 		
 		if (hasRightOption()) {
 			return Choice.RIGHT;
 		}
 		message.echo("no right option");
+		setBack();
+				
+		if (hasStraight) {
+			message.echo("found a straight option");
+			return Choice.STRAIGHT;
+		}
+		
+		if (hasLeftOption()) {
+			setBack();
+			return Choice.LEFT;
+		}
+		message.echo("no left option");
 		setBack();
 		
 		return Choice.BACK;

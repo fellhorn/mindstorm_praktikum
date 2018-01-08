@@ -5,7 +5,7 @@ import lejos.utility.DebugMessages;
 public class Curves {
 	
 	
-	private static final int TURN_SPEED = 100;
+	private static final int TURN_SPEED = 30;
 	private static DebugMessages message = new DebugMessages(1);
 	
 	/**

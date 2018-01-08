@@ -27,8 +27,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 	private MazeState state;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
 	
-	private static final int LINE_SPEED = 100;
-	private static final int ROTATION_SPEED = 60;
+	private static final int LINE_SPEED = 30;
+	private static final int ROTATION_SPEED = 30;
 
 	/**
 	 * Starts motors to run straight with ~55% speed. </br></br>
@@ -74,10 +74,12 @@ public class Maze extends AbstractInterruptableStateRunner {
 		if (choice == MazeRedPoint.Choice.BACK) {
 			Curves.turnLeft90(); Curves.turnLeft90();
 		}
+		StraightLines.resetMotors();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
 	}
 
 	protected void postLoopActions() {
-		StraightLines.regulatedForwardDrive(12000);
+		message.echo("Post loop action");
+		StraightLines.regulatedForwardDrive(10);
 	}
 }
