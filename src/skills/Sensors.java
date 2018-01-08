@@ -17,19 +17,22 @@ public class Sensors {
 	private static EV3GyroSensor gyro;
 	private static OwnColorSensor col;
 	private static EV3MediumRegulatedMotor motor;
-	private static final int SONIC_MOVEMENT_ANGLE = 900;
+	private static final int SONIC_MOVEMENT_ANGLE = 1300;
 	private static enum SonicStates {
 		UP,
 		DOWN
 	}
-	private static SonicStates sonicState = SonicStates.UP;
-	
+	private static SonicStates sonicState = SonicStates.DOWN;
+	/**
+	 * Default position sonicUp -> measured distance is ~15cm
+	 * SonicDown means 90° down
+	 */
 	public static void sonicDown() {
 		// Forward = up
 		// Backward = down
 		if (sonicState == SonicStates.UP) {
 			getMedMotor().setSpeed(300);
-			getMedMotor().rotate(SONIC_MOVEMENT_ANGLE, true);
+			getMedMotor().rotate(-SONIC_MOVEMENT_ANGLE, false);
 		}
 	}
 	
@@ -54,6 +57,8 @@ public class Sensors {
 		getMedMotor().setSpeed(300);
 		getMedMotor().forward();
 		
+		// Use calibrated position as "UP" position
+		sonicState = SonicStates.UP;
 		
 		while(sample[0] < distance){
 			getSonic().getDistanceMode().fetchSample(sample, 0);
