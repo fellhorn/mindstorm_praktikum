@@ -74,7 +74,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 		if (choice == MazeRedPoint.Choice.BACK) {
 			Curves.turnLeft90(); Curves.turnLeft90();
 		}
-		StraightLines.startEngines(LINE_SPEED);
+		StraightLines.regulatedForwardDrive(LINE_SPEED);
 	}
 
 	protected void postLoopActions() {
