@@ -4,6 +4,7 @@ import lejos.utility.DebugMessages;
 import java.util.HashSet;
 import java.util.Set;
 
+import Sensor.OwnColorSensor;
 import lejos.hardware.port.SensorPort;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
@@ -28,7 +29,7 @@ public class MazeRedPoint {
 	}
 
 	private static DebugMessages message = new DebugMessages(1);
-	private static EV3ColorSensor col = Sensors.getColor();
+	private static OwnColorSensor col = Sensors.getColor();
 	private static EV3GyroSensor gyro = Sensors.getGyro();
 	
 	private static float[] rotDegree = new float[] {0.0f, 0.0f};
@@ -38,17 +39,16 @@ public class MazeRedPoint {
 	private static final int STRAIGHT_SPEED = 30;
 	private static final float STRAIGHT_ROTATIONS = 0.2f;
 	private static final int ROTATION_SPEED = 20;
-	private static final float STRAIGHT_ANGLE_TOLERANCE  = 4.0f;
+	private static final float STRAIGHT_ANGLE_TOLERANCE  = 1.0f;
 
 
 
 	/**
-	 * Get the 
+	 * Get the right most available choice. Which is this order: right, straight, left, back
 	 * 
 	 * @return
 	 */
-	public static Choice getLeftMostAvailableChoice() {
-		message.clear();
+	public static Choice getRightMostAvailableChoice() {
 		message.echo("Red square choice detection started.");
 		gyro.getAngleMode().fetchSample(rotDegree, 0);
 		
@@ -94,7 +94,7 @@ public class MazeRedPoint {
 	
 	private static boolean isOnwhite() {
 		int groundColor = col.getColorID();
-		return groundColor == Color.WHITE || groundColor == Color.BLUE;
+		return groundColor == Color.WHITE;
 	}	
 	
 	private static boolean hasStraightOption() {
@@ -115,9 +115,13 @@ public class MazeRedPoint {
 	}
 
 	private static boolean searchSide(boolean searchRight) {
+		// TODO improve for 90 degree turns
+		
 		if (searchRight) {
+			Curves.turnRight90();
 			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
 		} else {
+			Curves.turnLeft90();
 			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
 		}
 		
@@ -148,7 +152,7 @@ public class MazeRedPoint {
 		
 		while (true) {
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
-			message.echo("" + Math.abs(rotDegree[0] - rotDegree[1]));
+			// message.echo("Delta angle: " + Math.abs(rotDegree[0] - rotDegree[1]));
 			if (Math.abs(rotDegree[0] - rotDegree[1]) < STRAIGHT_ANGLE_TOLERANCE) {
 				StraightLines.stop();
 				break;

@@ -52,15 +52,17 @@ public class Maze extends AbstractInterruptableStateRunner {
 		int groundColor = col.getColorID();
 		switch (groundColor) {
 		case Color.RED:
-			message.clear();
-			message.echo("red");
+			// message.clear();
+			message.echo("is on red");
 			StraightLines.stop();
 			this.state = MazeState.CROSSING;
 			lejos.utility.Delay.msDelay(5);
-			MazeRedPoint.Choice leftMostChoice = MazeRedPoint.getLeftMostAvailableChoice();
-			this.executeChoice(leftMostChoice);
+			message.echo("checking available choices");
+			MazeRedPoint.Choice rightMostChoice = MazeRedPoint.getRightMostAvailableChoice();
+			this.executeChoice(rightMostChoice);
 			break;
 		default:
+			message.echo("follow line mode");
 			followLine.inLoopActions();
 			break;
 		}
@@ -69,6 +71,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 	}
 	
 	private void executeChoice(MazeRedPoint.Choice choice) {
+		message.echo("Executing a choice");
 		StraightLines.stop();
 		lejos.utility.Delay.msDelay(10);
 		if (choice == MazeRedPoint.Choice.BACK) {
@@ -79,6 +82,9 @@ public class Maze extends AbstractInterruptableStateRunner {
 	}
 
 	protected void postLoopActions() {
+		message.echo("Post loop action");
+		message.echo("Post loop action");
+		message.echo("Post loop action");
 		message.echo("Post loop action");
 		StraightLines.regulatedForwardDrive(10);
 	}
