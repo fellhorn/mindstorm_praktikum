@@ -8,6 +8,7 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 
 import mainRobotControl.AbstractInterruptableStateRunner;
+import mainRobotControl.ParcourState;
 import mainRobotControl.StateMachine;
 import skills.*;
 
@@ -21,8 +22,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 	private FollowLine followLine;
 
 	public enum MazeState {
-		FOLLOW_LINE,
-		CROSSING,
+		SEARCHING_START,
+		IN_MAZE,
 	}
 	private MazeState state;
 	private float[] rotDegree = new float[] {0.0f, 0.0f};
@@ -43,31 +44,62 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 		followLine = new FollowLine(col, gyro);
 
-		state = MazeState.FOLLOW_LINE;
+		state = MazeState.SEARCHING_START;
 		followLine.preLoopActions();
 	}
 
 	@Override
 	protected void inLoopActions() {
+		switch (this.state) {
+		case SEARCHING_START:
+			enterMaze();
+			break;
+		case IN_MAZE:
+			inMazeAction();
+			break;
+		}
+	}
+	
+	private void enterMaze() {
+		StraightLines.resetMotors();
+		StraightLines.regulatedForwardDrive(LINE_SPEED);
+		while (true) {
+			int groundColor = col.getColorID();
+			
+			if (groundColor == Color.WHITE) {
+				break;
+			}
+			
+			lejos.utility.Delay.msDelay(10);
+		}
+		
+		this.state = MazeState.IN_MAZE;
+	}
+	
+	private void switchToBridge() {
+		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
+	}
+	
+	private void inMazeAction() {
 		int groundColor = col.getColorID();
 		switch (groundColor) {
 		case Color.RED:
-			// message.clear();
-			message.echo("is on red");
+			message.echo("found red");
 			StraightLines.stop();
-			this.state = MazeState.CROSSING;
 			lejos.utility.Delay.msDelay(5);
 			message.echo("checking available choices");
-			MazeRedPoint.Choice rightMostChoice = MazeRedPoint.getRightMostAvailableChoice();
-			this.executeChoice(rightMostChoice);
+			MazeRedPoint.Choice myChoice = MazeRedPoint.getRightMostAvailableChoice();
+			this.executeChoice(myChoice);
+			break;
+		case Color.BLUE:
+			message.echo("Found blue, switching to bridge");
+			this.switchToBridge();
 			break;
 		default:
 			message.echo("follow line mode");
 			followLine.inLoopActions();
 			break;
 		}
-		//System.out.println(1000.0 / sw.elapsed());
-		//sw.reset();
 	}
 	
 	private void executeChoice(MazeRedPoint.Choice choice) {
