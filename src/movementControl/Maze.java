@@ -76,10 +76,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	}
 
-	private void switchToBridge() {
-		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
-	}
-
 	private void inMazeAction() {
 		int groundColor = col.getColorID();
 		switch (groundColor) {
@@ -93,7 +89,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 			break;
 		case Color.BLUE:
 			message.echo("Found blue, switching to bridge");
-			this.switchToBridge();
+			this.running = false;
 			break;
 		default:
 			// followLine.preLoopActions();
@@ -115,6 +111,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 		message.echo("Post loop action");
 		message.echo("Post loop action");
 		message.echo("Post loop action");
-		StraightLines.regulatedForwardDrive(10);
+		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
 	}
 }
