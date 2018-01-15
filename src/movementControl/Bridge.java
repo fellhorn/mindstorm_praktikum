@@ -28,7 +28,8 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	@Override
 	protected void preLoopActions() {
 		message.clear();
-		message.echo("Crossing Bridge\nAdjust ultrasonic sensor");		
+		message.echo("Crossing Bridge");
+		message.echo("Adjust ultrasonic sensor");		
 		
 		sonicSensor = Sensors.getSonic();
 		colorSensor = Sensors.getColor();

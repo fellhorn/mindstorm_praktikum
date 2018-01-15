@@ -20,29 +20,29 @@ public class Test extends AbstractInterruptableStateRunner {
 		// TODO Auto-generated method stub
 		//src.skills.Sensors.calibrateSonic(0.3f);
 		//skills.StraightLines.wheelRotation(0.25f, 400);
-		/*col = Sensors.getColor();
-		boolean tr = col.setFloodlight(Color.YELLOW);
-		message = new DebugMessages(1);
+		col = Sensors.getColor();
+		/*boolean tr = col.setFloodlight(Color.YELLOW);
+		*/message = new DebugMessages(1);/*
 		message.clear();
 		System.out.println(tr + " " + col.getFloodlight());
-		id = col.getColorID();
-		//message.echo("Color: " +  id);*/
+		int id = col.getColorID();
+		message.echo("Color: " +  id);
 		//col = new OwnColorSensor(SensorPort.S2);
-		ticks = 0;
+		ticks = 0;*/
 	}
 
 	@Override
 	protected void inLoopActions() {
-		/*if(id != col.getColorID()){
-			id = col.getColorID();
+		/*if(id != col.getColorID()){*/
+			int id = col.getColorID();
 			message.clear();
 			message.echo("Color: " +  id);
 		
-		}*/
+		/*}*/
 		//spiral 
-		float smooth = 1.0f - (ticks / 5000.0f);
-		Curves.smoothSpeededLeftTurn(smooth, 300);
-		ticks++;
+		//float smooth = 1.0f - (ticks / 5000.0f);
+		//Curves.smoothSpeededLeftTurn(smooth, 300);
+		//ticks++;
 		//col.getColorID();
 		
 	}

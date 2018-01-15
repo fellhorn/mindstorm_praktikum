@@ -33,9 +33,11 @@ public class OwnColorSensor extends EV3ColorSensor {
 			return Color.NONE;
 		}else if(sample[0] + sample[1] + sample[2] < 0.2) {
 			return Color.BLACK;
-		}else if(sample[0]/sample[2] < 0.5){
+		}else if(sample[0]/sample[2] < 0.3){
+			mes.clear();
+			mes.echo("-----BLUE-----");
 			return Color.BLUE;
-		}else if(sample[0]/sample[2] > 9.0){
+		}else if(sample[0]/sample[2] > 8.0){
 			return Color.RED;
 		}else{
 			return Color.BLACK;

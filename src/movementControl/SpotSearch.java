@@ -1,7 +1,6 @@
 package movementControl;
 
 import Sensor.OwnColorSensor;
-import Sensor.SensorThread;
 import Sensor.SingleValueSensorWrapper;
 import lejos.hardware.Sound;
 import lejos.robotics.Color;

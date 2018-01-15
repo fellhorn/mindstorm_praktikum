@@ -55,7 +55,7 @@ public class Line extends AbstractInterruptableStateRunner {
 	@Override
 	protected void preLoopActions() {
 		sonic = Sensors.getSonic();
-		Sensors.calibrateSonic(0.25f);
+		Sensors.calibrateSonic(0.5f);
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
@@ -66,9 +66,15 @@ public class Line extends AbstractInterruptableStateRunner {
 	protected void inLoopActions() {
 		//set to 2 for full course and 0 for testing obstacle only
 		//TODO change to bool that activates ultrasonic => test quicker
-		if (gapCount >= 2) {
+		message.clear();
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		if (gapCount >= 0) {
 			sonic.getDistanceMode().fetchSample(dist, 0);
-			if (dist[0] < 0.15) {
+			message.echo(gapCount);
+			if (dist[0] < 0.10) {
 				StraightLines.stop();
 				Curves.turnRight90();
 				StraightLines.wheelRotation(1.5f, LINE_SPEED);
@@ -143,7 +149,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
 			// search for line on the right
 			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
-			if (rotDegree[0] - rotDegree[1] > 25.0 - SEARCH_ROTATION_TOLERANCE) {
+			if (rotDegree[0] - rotDegree[1] > 40.0 - SEARCH_ROTATION_TOLERANCE) {
 				lineState = LineStates.TURN_BACK_SMALL_LAST_LEFT;
 			}
 			break;
@@ -153,7 +159,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			// search for line on the left
 			// message.echo("Turn left");
 			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
-			if (rotDegree[0] - rotDegree[1] < -25.0 + SEARCH_ROTATION_TOLERANCE) {
+			if (rotDegree[0] - rotDegree[1] < -40.0 + SEARCH_ROTATION_TOLERANCE) {
 				lineState = LineStates.TURN_BACK_SMALL_LAST_RIGHT;
 			}
 			break;
@@ -166,7 +172,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			} else {
 				// search for line on the left
 				Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
-				if (rotDegree[0] - rotDegree[1] < -25.0 + SEARCH_ROTATION_TOLERANCE) {
+				if (rotDegree[0] - rotDegree[1] < -40.0 + SEARCH_ROTATION_TOLERANCE) {
 					lineState = LineStates.SEARCH_LINE_LAST_LEFT;
 				}
 			}
@@ -182,7 +188,7 @@ public class Line extends AbstractInterruptableStateRunner {
 			} else {
 				// search for line on the right
 				Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
-				if (rotDegree[0] - rotDegree[1] > 25.0 - SEARCH_ROTATION_TOLERANCE) {
+				if (rotDegree[0] - rotDegree[1] > 40.0 - SEARCH_ROTATION_TOLERANCE) {
 					lineState = LineStates.SEARCH_LINE_LAST_RIGHT;
 				}
 			}
@@ -270,12 +276,12 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 
 		case ON_GAP_LAST_LEFT:
-			StraightLines.wheelRotation(0.5f, LINE_SPEED);
+			StraightLines.wheelRotation(1.0f, LINE_SPEED);
 			lineState = LineStates.SEARCH_LINE_LAST_LEFT;
 			break;
 			
 		case ON_GAP_LAST_RIGHT:
-			StraightLines.wheelRotation(0.5f, LINE_SPEED);
+			StraightLines.wheelRotation(1.0f, LINE_SPEED);
 			lineState = LineStates.SEARCH_LINE_LAST_RIGHT;
 			// TODO what if the robot does not find the end of line after gap?
 			break;
