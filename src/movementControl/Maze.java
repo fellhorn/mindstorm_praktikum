@@ -96,7 +96,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 			this.switchToBridge();
 			break;
 		default:
-			message.echo("follow line mode");
 			followLine.inLoopActions();
 			break;
 		}
