@@ -22,7 +22,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private float[] rotDegree = new float[] { 0.0f, 0.0f };
 
-	private static final int LINE_SPEED = 100;
+
+	private static final int LINE_SPEED = 60;
 	private static final int ROTATION_SPEED = 50;
 	private static final int APPROACH_SPEED = 300;
 	
@@ -65,7 +66,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 			running = false;
 			break;
 		default:
-			message.echo("follow line mode");
+			// followLine.preLoopActions();
 			followLine.inLoopActions();
 			break;
 		}
@@ -99,9 +100,9 @@ public class Maze extends AbstractInterruptableStateRunner {
 		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
 	}
 
-
 	private void executeChoice(MazeRedPoint.Choice choice) {
 		message.echo("Executing a choice");
+		message.echo(choice.toString());
 		StraightLines.stop();
 		lejos.utility.Delay.msDelay(10);
 		if (choice == MazeRedPoint.Choice.BACK) {
