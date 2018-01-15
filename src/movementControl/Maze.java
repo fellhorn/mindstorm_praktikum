@@ -88,8 +88,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 			StraightLines.stop();
 			lejos.utility.Delay.msDelay(5);
 			message.echo("checking available choices");
-			MazeRedPoint.Choice myChoice = MazeRedPoint.getRightMostAvailableChoice();
-			this.executeChoice(myChoice);
+			MazeRedPoint.getRightMostAvailableChoice();
+			this.continueDriving();
 			break;
 		case Color.BLUE:
 			message.echo("Found blue, switching to bridge");
@@ -102,15 +102,10 @@ public class Maze extends AbstractInterruptableStateRunner {
 		}
 	}
 
-	private void executeChoice(MazeRedPoint.Choice choice) {
-		message.echo("Executing a choice");
-		message.echo(choice.toString());
+	private void continueDriving() {
+		message.echo("continue driving");
 		StraightLines.stop();
 		lejos.utility.Delay.msDelay(10);
-		if (choice == MazeRedPoint.Choice.BACK) {
-			Curves.turnLeft90();
-			Curves.turnLeft90();
-		}
 		StraightLines.resetMotors();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
 	}

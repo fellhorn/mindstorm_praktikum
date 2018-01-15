@@ -48,7 +48,7 @@ public class MazeRedPoint {
 	 * 
 	 * @return
 	 */
-	public static Choice getRightMostAvailableChoice() {
+	public static void getRightMostAvailableChoice() {
 		message.echo("Red square choice detection started.");
 		gyro.getAngleMode().fetchSample(rotDegree, 0);
 		
@@ -58,38 +58,24 @@ public class MazeRedPoint {
 			// throw new RuntimeException("Has to start on a red square");
 		}
 		
-		boolean hasStraight;
-		
-		message.echo("searching straight");
-		
-		
-		hasStraight = hasStraightOption();
-		if (hasStraight) {
-			message.echo("found a straight option");
-		}
-		
-		message.echo("Searching right");
-		
+		StraightLines.wheelRotation(STRAIGHT_ROTATIONS, STRAIGHT_SPEED);
 		if (hasRightOption()) {
 			message.echo("Found right");
-			return Choice.RIGHT;
+			return;
 		}
 		message.echo("no right option");
-		setBack();
-				
-		if (hasStraight) {
-			message.echo("found a straight option");
-			return Choice.STRAIGHT;
+		
+		Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
+		
+		groundColor = col.getColorID();
+		while(groundColor != Color.WHITE) {
+			lejos.utility.Delay.msDelay(10);
+			groundColor = col.getColorID();
 		}
 		
-		if (hasLeftOption()) {
-			message.echo("found left");
-			return Choice.LEFT;
-		}
-		message.echo("no left option");
-		setBack();
+		StraightLines.stop();
 		
-		return Choice.BACK;
+		return;
 		
 	}
 	
