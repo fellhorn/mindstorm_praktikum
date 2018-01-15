@@ -46,8 +46,8 @@ public class FollowLine {
 	private float[] rotDegree = new float[] { 0.0f, 0.0f };
 
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
-	private static final int LINE_SPEED = 100;
-	private static final int ROTATION_SPEED = 50;
+	private static final int LINE_SPEED = 50;
+	private static final int ROTATION_SPEED = 30;
 	
 	public FollowLine(OwnColorSensor colorSensor, EV3GyroSensor gyroSensor) {
 		this.col = colorSensor;
@@ -55,6 +55,7 @@ public class FollowLine {
 	}
 	
 	public void preLoopActions() {
+		StraightLines.resetMotors();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
 		lineState = LineStates.ON_LINE_LAST_RIGHT;
 	}

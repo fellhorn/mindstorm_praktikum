@@ -22,8 +22,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private float[] rotDegree = new float[] { 0.0f, 0.0f };
 
-	private static final int LINE_SPEED = 100;
-	private static final int ROTATION_SPEED = 50;
+	private static final int LINE_SPEED = 30;
+	private static final int ROTATION_SPEED = 30;
 	private static final int APPROACH_SPEED = 300;
 	
 	private boolean closeToMaze = false;
@@ -43,7 +43,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 		followLine = new FollowLine(col, gyro);
 
-		state = MazeState.SEARCHING_START;
 		followLine.preLoopActions();
 		enterMaze();
 	}
@@ -70,10 +69,11 @@ public class Maze extends AbstractInterruptableStateRunner {
 				closeToMaze = true;
 			}
 
-			lejos.utility.Delay.msDelay(10);
+			lejos.utility.Delay.msDelay(5);
 		}
+		
+		Curves.turnRight90();
 
-		this.state = MazeState.IN_MAZE;
 	}
 
 	private void switchToBridge() {
@@ -96,6 +96,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 			this.switchToBridge();
 			break;
 		default:
+			followLine.preLoopActions();
 			followLine.inLoopActions();
 			break;
 		}

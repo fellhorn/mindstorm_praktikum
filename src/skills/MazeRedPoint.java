@@ -152,7 +152,7 @@ public class MazeRedPoint {
 		
 		while (true) {
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
-			// message.echo("Delta angle: " + Math.abs(rotDegree[0] - rotDegree[1]));
+			message.echo("Delta angle: " + Math.abs(rotDegree[0] - rotDegree[1]));
 			if (Math.abs(rotDegree[0] - rotDegree[1]) < STRAIGHT_ANGLE_TOLERANCE) {
 				StraightLines.stop();
 				break;

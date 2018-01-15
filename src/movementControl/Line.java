@@ -58,7 +58,6 @@ public class Line extends AbstractInterruptableStateRunner {
 		Sensors.calibrateSonic(0.25f);
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
-		StraightLines.resetMotors();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
 		lineState = LineStates.ON_LINE_LAST_RIGHT;
 	}
