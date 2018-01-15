@@ -1,10 +1,8 @@
 package movementControl;
+
 import lejos.utility.DebugMessages;
-
-
-import lejos.hardware.sensor.EV3ColorSensor;
+import Sensor.OwnColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
-import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 
 import mainRobotControl.AbstractInterruptableStateRunner;
@@ -16,23 +14,24 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private DebugMessages message = new DebugMessages(1);
 
-	private EV3ColorSensor col;  
+	private OwnColorSensor col;
 	private EV3GyroSensor gyro;
-	
+
 	private FollowLine followLine;
 
-	public enum MazeState {
-		SEARCHING_START,
-		IN_MAZE,
-	}
-	private MazeState state;
-	private float[] rotDegree = new float[] {0.0f, 0.0f};
+
+	private float[] rotDegree = new float[] { 0.0f, 0.0f };
+
+	private static final int LINE_SPEED = 100;
+	private static final int ROTATION_SPEED = 50;
+	private static final int APPROACH_SPEED = 300;
 	
-	private static final int LINE_SPEED = 30;
-	private static final int ROTATION_SPEED = 30;
+	private boolean closeToMaze = false;
+	
 
 	/**
-	 * Starts motors to run straight with ~55% speed. </br></br>
+	 * Starts motors to run straight with ~55% speed. </br>
+	 * </br>
 	 * {@inheritDoc}
 	 */
 	@Override
@@ -44,42 +43,42 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 		followLine = new FollowLine(col, gyro);
 
-		state = MazeState.SEARCHING_START;
 		followLine.preLoopActions();
+		enterMaze();
 	}
 
 	@Override
 	protected void inLoopActions() {
-		switch (this.state) {
-		case SEARCHING_START:
-			enterMaze();
-			break;
-		case IN_MAZE:
-			inMazeAction();
-			break;
-		}
+		inMazeAction();
 	}
-	
+
 	private void enterMaze() {
 		StraightLines.resetMotors();
-		StraightLines.regulatedForwardDrive(LINE_SPEED);
+		if(!closeToMaze) {
+			StraightLines.regulatedForwardDrive(APPROACH_SPEED);			
+		} else {
+			StraightLines.regulatedForwardDrive(LINE_SPEED);
+		}
 		while (true) {
 			int groundColor = col.getColorID();
-			
+
 			if (groundColor == Color.WHITE) {
 				break;
 			}
-			
+			if (groundColor == Color.BLUE) {
+				closeToMaze = true;
+			}
+
 			lejos.utility.Delay.msDelay(10);
 		}
-		
-		this.state = MazeState.IN_MAZE;
+		Curves.turnRight90();
+
 	}
-	
+
 	private void switchToBridge() {
 		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
 	}
-	
+
 	private void inMazeAction() {
 		int groundColor = col.getColorID();
 		switch (groundColor) {
@@ -101,13 +100,14 @@ public class Maze extends AbstractInterruptableStateRunner {
 			break;
 		}
 	}
-	
+
 	private void executeChoice(MazeRedPoint.Choice choice) {
 		message.echo("Executing a choice");
 		StraightLines.stop();
 		lejos.utility.Delay.msDelay(10);
 		if (choice == MazeRedPoint.Choice.BACK) {
-			Curves.turnLeft90(); Curves.turnLeft90();
+			Curves.turnLeft90();
+			Curves.turnLeft90();
 		}
 		StraightLines.resetMotors();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);

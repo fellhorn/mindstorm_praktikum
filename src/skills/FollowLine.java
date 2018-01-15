@@ -1,5 +1,6 @@
 package skills;
 
+import Sensor.OwnColorSensor;
 import lejos.hardware.sensor.EV3ColorSensor;
 import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
@@ -19,7 +20,7 @@ public class FollowLine {
 	
 	private DebugMessages message = new DebugMessages(1);
 
-	private EV3ColorSensor col;
+	private OwnColorSensor col;
 	private EV3GyroSensor gyro;
 
 	public enum LineStates {
@@ -45,10 +46,10 @@ public class FollowLine {
 	private float[] rotDegree = new float[] { 0.0f, 0.0f };
 
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
-	private static final int LINE_SPEED = 80;
-	private static final int ROTATION_SPEED = 55;
+	private static final int LINE_SPEED = 100;
+	private static final int ROTATION_SPEED = 50;
 	
-	public FollowLine(EV3ColorSensor colorSensor, EV3GyroSensor gyroSensor) {
+	public FollowLine(OwnColorSensor colorSensor, EV3GyroSensor gyroSensor) {
 		this.col = colorSensor;
 		this.gyro = gyroSensor;
 	}
