@@ -2,6 +2,7 @@ package movementControl;
 
 import lejos.utility.DebugMessages;
 import Sensor.OwnColorSensor;
+import Sensor.SingleValueSensorWrapper;
 import lejos.hardware.sensor.EV3GyroSensor;
 import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
@@ -18,7 +19,8 @@ public class Line extends AbstractInterruptableStateRunner {
 	private OwnColorSensor col;
 	private EV3GyroSensor gyro;
 	private EV3UltrasonicSensor sonic;
-
+	private SingleValueSensorWrapper touch = new SingleValueSensorWrapper(Sensors.getTouch(), "Touch");
+	
 	public enum LineStates {
 		ON_LINE_LAST_LEFT, 
 		ON_LINE_LAST_RIGHT, 
@@ -55,7 +57,7 @@ public class Line extends AbstractInterruptableStateRunner {
 	@Override
 	protected void preLoopActions() {
 		sonic = Sensors.getSonic();
-		Sensors.calibrateSonic(0.25f);
+		//Sensors.calibrateSonic(0.25f);
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
@@ -66,9 +68,15 @@ public class Line extends AbstractInterruptableStateRunner {
 	protected void inLoopActions() {
 		//set to 2 for full course and 0 for testing obstacle only
 		//TODO change to bool that activates ultrasonic => test quicker
-		if (gapCount >= 2) {
-			sonic.getDistanceMode().fetchSample(dist, 0);
-			if (dist[0] < 0.15) {
+		//if (gapCount >= 2) {
+
+			//sonic.getDistanceMode().fetchSample(dist, 0);
+			//if (dist[0] < 0.15) {
+			
+				if (touch.getSample() == 1.0) {
+				// GO BACK CAUSE TOUCH
+				StraightLines.wheelRotation(-0.3f, LINE_SPEED);
+				
 				StraightLines.stop();
 				Curves.turnRight90();
 				StraightLines.wheelRotation(1.5f, LINE_SPEED);
@@ -76,9 +84,10 @@ public class Line extends AbstractInterruptableStateRunner {
 				StraightLines.wheelRotation(3.0f, LINE_SPEED);
 				Curves.turnLeft90();
 				gapCount = -1;
+				StraightLines.resetMotors();
 				lineState = LineStates.ON_GAP_LAST_LEFT;
 			}
-		}
+		//}
 		int groundColor = col.getColorID();
 		switch (groundColor) {
 		case Color.BLUE: // TODO check as which color white is seen
