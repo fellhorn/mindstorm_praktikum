@@ -34,11 +34,11 @@ public class MazeRedPoint {
 	
 	private static float[] rotDegree = new float[] {0.0f, 0.0f};
 
-	private static final float SEARCH_ROTATION_TOLERANCE = 7.0f;
+	private static final float SEARCH_ROTATION_TOLERANCE = 15.0f;
 	private static final float SEARCH_ROTATION_TARGET = 90.0f; 
 	private static final int STRAIGHT_SPEED = 100;
-	private static final float STRAIGHT_ROTATIONS = 0.2f;
-	private static final int ROTATION_SPEED = 50;
+	private static final float STRAIGHT_ROTATIONS = 0.4f;
+	private static final int ROTATION_SPEED = 60;
 	private static final float STRAIGHT_ANGLE_TOLERANCE  = 1.0f;
 
 
@@ -71,6 +71,7 @@ public class MazeRedPoint {
 		message.echo("Searching right");
 		
 		if (hasRightOption()) {
+			message.echo("Found right");
 			return Choice.RIGHT;
 		}
 		message.echo("no right option");
@@ -82,7 +83,7 @@ public class MazeRedPoint {
 		}
 		
 		if (hasLeftOption()) {
-			setBack();
+			message.echo("found left");
 			return Choice.LEFT;
 		}
 		message.echo("no left option");
@@ -101,7 +102,6 @@ public class MazeRedPoint {
 		StraightLines.wheelRotation(STRAIGHT_ROTATIONS, STRAIGHT_SPEED);
 		boolean result = (col.getColorID() == Color.WHITE);
 		StraightLines.stop();
-		StraightLines.wheelRotation(STRAIGHT_ROTATIONS, -STRAIGHT_SPEED);
 		
 		return result;
 	}
@@ -152,8 +152,8 @@ public class MazeRedPoint {
 		
 		while (true) {
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
-			message.echo("Delta angle: " + Math.abs(rotDegree[0] - rotDegree[1]));
-			if (Math.abs(rotDegree[0] - rotDegree[1]) < STRAIGHT_ANGLE_TOLERANCE) {
+			message.echo("Delta angle: " + Math.abs(rotDegree[0] - rotDegree[1] % 360.0));
+			if (Math.abs(rotDegree[0] - rotDegree[1]) % 360.0 < STRAIGHT_ANGLE_TOLERANCE) {
 				StraightLines.stop();
 				break;
 			}
