@@ -39,8 +39,8 @@ public class MazeRedPoint {
 	private static final int STRAIGHT_SPEED = 100;
 
 	private static final float STRAIGHT_ROTATIONS = 0.4f;
-	private static final int ROTATION_SPEED = 60;
-	private static final float STRAIGHT_ANGLE_TOLERANCE  = 1.0f;
+	private static final int ROTATION_SPEED = 80;
+	private static final float STRAIGHT_ANGLE_TOLERANCE  = 2.0f;
 
 
 
@@ -49,7 +49,7 @@ public class MazeRedPoint {
 	 * 
 	 * @return
 	 */
-	public static Choice getRightMostAvailableChoice() {
+	public static void getRightMostAvailableChoice() {
 		message.echo("Red square choice detection started.");
 		gyro.getAngleMode().fetchSample(rotDegree, 0);
 		
@@ -59,38 +59,24 @@ public class MazeRedPoint {
 			// throw new RuntimeException("Has to start on a red square");
 		}
 		
-		boolean hasStraight;
-		
-		message.echo("searching straight");
-		
-		
-		hasStraight = hasStraightOption();
-		if (hasStraight) {
-			message.echo("found a straight option");
-		}
-		
-		message.echo("Searching right");
-		
-		if (hasRightOption()) {
+		StraightLines.wheelRotation(STRAIGHT_ROTATIONS, STRAIGHT_SPEED);
+		if (searchRight()) {
 			message.echo("Found right");
-			return Choice.RIGHT;
+			return;
 		}
 		message.echo("no right option");
-		setBack();
-				
-		if (hasStraight) {
-			message.echo("found a straight option");
-			return Choice.STRAIGHT;
+		
+		Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
+		
+		groundColor = col.getColorID();
+		while(groundColor != Color.WHITE) {
+			lejos.utility.Delay.msDelay(10);
+			groundColor = col.getColorID();
 		}
 		
-		if (hasLeftOption()) {
-			message.echo("found left");
-			return Choice.LEFT;
-		}
-		message.echo("no left option");
-		setBack();
+		StraightLines.stop();
 		
-		return Choice.BACK;
+		return;
 		
 	}
 	
@@ -99,32 +85,9 @@ public class MazeRedPoint {
 		return groundColor == Color.WHITE;
 	}	
 	
-	private static boolean hasStraightOption() {
-		StraightLines.wheelRotation(STRAIGHT_ROTATIONS, STRAIGHT_SPEED);
-		boolean result = (col.getColorID() == Color.WHITE);
-		StraightLines.stop();
-		
-		return result;
-	}
-	
-	private static boolean hasLeftOption() {
-		return searchSide(false);
-	}
-	
-	private static boolean hasRightOption() {
-		return searchSide(true);
-	}
-
-	private static boolean searchSide(boolean searchRight) {
-		// TODO improve for 90 degree turns
-		
-		if (searchRight) {
-			Curves.turnRight90();
-			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
-		} else {
-			Curves.turnLeft90();
-			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
-		}
+	private static boolean searchRight() {
+		Curves.turnRight90();
+		Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
 		
 		while (true) {
 			gyro.getAngleMode().fetchSample(rotDegree, 1);
@@ -137,30 +100,6 @@ public class MazeRedPoint {
 				return false;
 			}
 		}
-	}
-	
-	private static void setBack() {
-		message.echo("setting back");
-		StraightLines.stop();
-		
-		boolean turnRight = (rotDegree[0] - rotDegree[1]) > 0.0f;
-		
-		if (turnRight) {
-			Curves.smoothSpeededRightTurn(-1, ROTATION_SPEED);
-		} else {
-			Curves.smoothSpeededLeftTurn(-1, ROTATION_SPEED);
-		}
-		
-		while (true) {
-			gyro.getAngleMode().fetchSample(rotDegree, 1);
-			message.echo("Delta angle: " + Math.abs(rotDegree[0] - rotDegree[1] % 360.0));
-			if (Math.abs(rotDegree[0] - rotDegree[1]) % 360.0 < STRAIGHT_ANGLE_TOLERANCE) {
-				StraightLines.stop();
-				break;
-			}
-		}
-		
-	}
-		
+	}		
 	
 }

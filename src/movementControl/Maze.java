@@ -23,8 +23,9 @@ public class Maze extends AbstractInterruptableStateRunner {
 	private float[] rotDegree = new float[] { 0.0f, 0.0f };
 
 
-	private static final int LINE_SPEED = 60;
-	private static final int ROTATION_SPEED = 50;
+	private static final int LINE_SPEED = 100;
+	private static final int ROTATION_SPEED = 70;
+	
 	private static final int APPROACH_SPEED = 300;
 	
 	private boolean closeToMaze = false;
@@ -51,7 +52,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	@Override
 	protected void inLoopActions() {
-		int groundColor = col.getColorID();
+		/*int groundColor = col.getColorID();
 		switch (groundColor) {
 		case Color.RED:
 			message.echo("found red");
@@ -68,8 +69,9 @@ public class Maze extends AbstractInterruptableStateRunner {
 		default:
 			// followLine.preLoopActions();
 			followLine.inLoopActions();
-			break;
-		}
+			break;*/
+		//}
+		inMazeAction();
 	}
 
 	private void enterMaze() {
@@ -96,19 +98,33 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	}
 
-	private void switchToBridge() {
-		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
+
+	private void inMazeAction() {
+		int groundColor = col.getColorID();
+		switch (groundColor) {
+		case Color.RED:
+			message.echo("found red");
+			StraightLines.stop();
+			lejos.utility.Delay.msDelay(5);
+			message.echo("checking available choices");
+			MazeRedPoint.getRightMostAvailableChoice();
+			this.continueDriving();
+			break;
+		case Color.BLUE:
+			message.echo("Found blue, switching to bridge");
+			this.running = false;
+			break;
+		default:
+			// followLine.preLoopActions();
+			followLine.inLoopActions();
+			break;
+		}
 	}
 
-	private void executeChoice(MazeRedPoint.Choice choice) {
-		message.echo("Executing a choice");
-		message.echo(choice.toString());
+	private void continueDriving() {
+		message.echo("continue driving");
 		StraightLines.stop();
 		lejos.utility.Delay.msDelay(10);
-		if (choice == MazeRedPoint.Choice.BACK) {
-			Curves.turnLeft90();
-			Curves.turnLeft90();
-		}
 		StraightLines.resetMotors();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
 	}
@@ -118,6 +134,8 @@ public class Maze extends AbstractInterruptableStateRunner {
 		message.echo("Post loop action");
 		message.echo("Post loop action");
 		message.echo("Post loop action");
-		switchToBridge();
+
+		StraightLines.stop();
+		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
 	}
 }
