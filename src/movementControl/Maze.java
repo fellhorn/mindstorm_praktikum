@@ -44,12 +44,31 @@ public class Maze extends AbstractInterruptableStateRunner {
 		followLine = new FollowLine(col, gyro);
 
 		followLine.preLoopActions();
+		Sensors.sonicDown();
 		enterMaze();
 	}
 
 	@Override
 	protected void inLoopActions() {
-		inMazeAction();
+		int groundColor = col.getColorID();
+		switch (groundColor) {
+		case Color.RED:
+			message.echo("found red");
+			StraightLines.stop();
+			lejos.utility.Delay.msDelay(5);
+			message.echo("checking available choices");
+			MazeRedPoint.Choice myChoice = MazeRedPoint.getRightMostAvailableChoice();
+			this.executeChoice(myChoice);
+			break;
+		case Color.BLUE:
+			message.echo("Found blue, switching to bridge");
+			running = false;
+			break;
+		default:
+			message.echo("follow line mode");
+			followLine.inLoopActions();
+			break;
+		}
 	}
 
 	private void enterMaze() {
@@ -71,6 +90,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 			lejos.utility.Delay.msDelay(10);
 		}
+		StraightLines.wheelRotation(0.2f, LINE_SPEED);
 		Curves.turnRight90();
 
 	}
@@ -79,27 +99,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
 	}
 
-	private void inMazeAction() {
-		int groundColor = col.getColorID();
-		switch (groundColor) {
-		case Color.RED:
-			message.echo("found red");
-			StraightLines.stop();
-			lejos.utility.Delay.msDelay(5);
-			message.echo("checking available choices");
-			MazeRedPoint.Choice myChoice = MazeRedPoint.getRightMostAvailableChoice();
-			this.executeChoice(myChoice);
-			break;
-		case Color.BLUE:
-			message.echo("Found blue, switching to bridge");
-			this.switchToBridge();
-			break;
-		default:
-			message.echo("follow line mode");
-			followLine.inLoopActions();
-			break;
-		}
-	}
 
 	private void executeChoice(MazeRedPoint.Choice choice) {
 		message.echo("Executing a choice");
@@ -118,6 +117,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 		message.echo("Post loop action");
 		message.echo("Post loop action");
 		message.echo("Post loop action");
-		StraightLines.regulatedForwardDrive(10);
+		switchToBridge();
 	}
 }
