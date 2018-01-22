@@ -5,8 +5,9 @@ import lejos.utility.DebugMessages;
 public class Curves {
 	
 	
-	private static final int TURN_SPEED = 30;
+	private static final int TURN_SPEED = 50;
 	private static DebugMessages message = new DebugMessages(1);
+	private static final int TURN_ANGLE = 90;
 	
 	/**
 	 * Robot performs a right turn by 90 degrees in the current place. The turn speed is constant and fairly slow.
@@ -20,7 +21,7 @@ public class Curves {
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		smoothSpeededRightTurn(-1, TURN_SPEED);
 		
-		while (sample[1] - sample[0] < 84) {
+		while (sample[1] - sample[0] < TURN_ANGLE) {
 			Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		}
 		StraightLines.stop();
@@ -38,7 +39,7 @@ public class Curves {
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 0);
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		smoothSpeededLeftTurn(-1, TURN_SPEED);
-		while (sample[0] - sample[1] < 84) {
+		while (sample[0] - sample[1] < TURN_ANGLE) {
 			Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
 		}
 		StraightLines.stop();
