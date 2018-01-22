@@ -45,23 +45,20 @@ public class Line extends AbstractInterruptableStateRunner {
 	private int gapCount = 0;
 	private float[] dist = new float[] { 0.0f };
 
-	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
+	private static final float SEARCH_ROTATION_TOLERANCE = 10.0f;
 	private static final int LINE_SPEED = 600;
 	private static final int ROTATION_SPEED = 100;
 
 	/**
-	 * Starts motors to run straight with ~55% speed. </br>
+	 * Starts motors to run straight with ~66% speed. </br>
 	 * </br>
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void preLoopActions() {
 		sonic = Sensors.getSonic();
-<<<<<<< HEAD
-		Sensors.calibrateSonic(0.5f);
-=======
+
 		//Sensors.calibrateSonic(0.25f);
->>>>>>> branch 'master' of https://git.scc.kit.edu/Tarek/lego-mindstorms.git
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
