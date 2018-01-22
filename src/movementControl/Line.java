@@ -82,19 +82,26 @@ public class Line extends AbstractInterruptableStateRunner {
 			//sonic.getDistanceMode().fetchSample(dist, 0);
 			//if (dist[0] < 0.15) {
 			
-				if (touch.getSample() == 1.0) {
+			if (touch.getSample() == 1.0 && (lineState == LineStates.ON_LINE_LAST_LEFT || 
+											 lineState == LineStates.ON_LINE_LAST_RIGHT)) {
 				// GO BACK CAUSE TOUCH
+				float angleArray[] = {0,0};
+				gyro.fetchSample(angleArray, 0);
+				StraightLines.setStraightAngle(angleArray[0]);
+				message.echo("angle: " + angleArray[0]);
+				
 				StraightLines.wheelRotation(-0.3f, LINE_SPEED);
 				
 				StraightLines.stop();
 				Curves.turnRight90();
-				StraightLines.wheelRotation(1.5f, LINE_SPEED);
+				StraightLines.wheelRotation(1.2f, LINE_SPEED);
 				Curves.turnLeft90();
 				StraightLines.wheelRotation(3.0f, LINE_SPEED);
 				Curves.turnLeft90();
+				StraightLines.wheelRotation(0.5f, LINE_SPEED);
 				gapCount = -1;
 				StraightLines.resetMotors();
-				lineState = LineStates.ON_GAP_LAST_LEFT;
+				lineState = LineStates.ON_GAP_LAST_RIGHT;
 			}
 		//}
 		int groundColor = col.getColorID();

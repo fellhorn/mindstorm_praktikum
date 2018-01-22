@@ -11,6 +11,7 @@ public class StraightLines {
 	private static EV3LargeRegulatedMotor right;
 	private static final int MOTOR_ACC = 4000;
 	private static DebugMessages message = new DebugMessages(2);
+	private static float straightAngle = 0;
 	
 	/**
 	 * Robot starts driving straight with the given speed. Regulation compensates one sided blocking of a wheel.<br>
@@ -23,6 +24,14 @@ public class StraightLines {
 		//message.echo(getLeft().getTachoCount() + " - " + getRight().getTachoCount());
 		getLeft().forward();
 		getRight().forward();		
+	}
+	
+	public static void setStraightAngle(float angle) {
+		straightAngle = angle;
+	}
+	
+	public static float getStraightAngle() {
+		return straightAngle;
 	}
 	
 	public static void regulatedBackwardDrive(int speedRef) {
