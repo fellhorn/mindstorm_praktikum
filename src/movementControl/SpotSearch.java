@@ -22,7 +22,7 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 
 	private static float backoffDistance = 1;
 
-	private boolean foundRed = false, foundWhite = false;
+	private boolean foundRed = false, foundWhite = false, tapped = false;
 	private OwnColorSensor col = Sensors.getColor();
 	DebugMessages mes = new DebugMessages();
 	SingleValueSensorWrapper t;
@@ -36,7 +36,8 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 
 		// Start by driving straight forward
 		t = new SingleValueSensorWrapper(Sensors.getTouch(), "Touch");
-		StraightLines.regulatedForwardDrive(400);
+		
+		//StraightLines.regulatedForwardDrive(400);
 	}
 
 	private void detectColor() {
@@ -83,6 +84,8 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 
 		// If we are 10cm close to the wall, stop and turn
 		if (t.getSample() == 1.0) {
+			// Set tapped every time
+			tapped = true;
 			contacts ++;
 			if (contacts  >= 4) {
 				// Increase back-off distance to shrink circle
@@ -92,9 +95,11 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 			StraightLines.wheelRotation(-0.2f * backoffDistance, 300);
 			Curves.turnLeft90();
 			StraightLines.resetMotors();
-			StraightLines.regulatedForwardDrive(400);
-
 		}
+		if (tapped)
+			StraightLines.regulatedForwardDrive(400);
+		else
+			Curves.smoothSpeededLeftTurn(0.95f, 400);
 	}
 
 	@Override
