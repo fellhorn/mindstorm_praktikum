@@ -24,6 +24,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private static final int LINE_SPEED = 350;
 	private static final int ROTATION_SPEED = 140;
+	
 	private static final int APPROACH_SPEED = 300;
 	
 	private boolean closeToMaze = false;
@@ -44,11 +45,31 @@ public class Maze extends AbstractInterruptableStateRunner {
 		followLine = new FollowLine(col, gyro);
 
 		followLine.preLoopActions();
+		Sensors.sonicDown();
 		enterMaze();
 	}
 
 	@Override
 	protected void inLoopActions() {
+		/*int groundColor = col.getColorID();
+		switch (groundColor) {
+		case Color.RED:
+			message.echo("found red");
+			StraightLines.stop();
+			lejos.utility.Delay.msDelay(5);
+			message.echo("checking available choices");
+			MazeRedPoint.Choice myChoice = MazeRedPoint.getRightMostAvailableChoice();
+			this.executeChoice(myChoice);
+			break;
+		case Color.BLUE:
+			message.echo("Found blue, switching to bridge");
+			running = false;
+			break;
+		default:
+			// followLine.preLoopActions();
+			followLine.inLoopActions();
+			break;*/
+		//}
 		inMazeAction();
 	}
 
@@ -69,15 +90,17 @@ public class Maze extends AbstractInterruptableStateRunner {
 				closeToMaze = true;
 			}
 
-			lejos.utility.Delay.msDelay(5);
+			lejos.utility.Delay.msDelay(10);
 		}
-		
+		StraightLines.wheelRotation(0.2f, LINE_SPEED);
 		Curves.turnRight90();
 
 	}
 
+
 	private void inMazeAction() {
 		int groundColor = col.getColorID();
+		message.echo(groundColor);
 		switch (groundColor) {
 		case Color.RED:
 			message.echo("found red");

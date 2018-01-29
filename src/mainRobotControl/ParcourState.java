@@ -1,12 +1,11 @@
 package mainRobotControl;
 
 public enum ParcourState {
-	TEST,
 	LINE_FOLLOWER,
+	MAZE,
 	ON_BRIDGE, 
 	SEARCH_SPOTS,
-	SEARCH_COLORED_AREA,
+	TEST,
 	RUN_AD_1,
-	IDLE,
-	MAZE
+	IDLE
 }

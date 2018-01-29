@@ -72,7 +72,6 @@ public class StateMachine {
 	private void startBridgeState(ParcourState previousState) {
 		currentController = new movementControl.Bridge();
 		currentController.run();
-		startSpotState(ParcourState.ON_BRIDGE);
 	}
 	
 	private void startWalkingState(ParcourState previousState) {

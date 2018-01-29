@@ -37,6 +37,7 @@ public class MazeRedPoint {
 	private static final float SEARCH_ROTATION_TOLERANCE = 15.0f;
 	private static final float SEARCH_ROTATION_TARGET = 90.0f; 
 	private static final int STRAIGHT_SPEED = 100;
+
 	private static final float STRAIGHT_ROTATIONS = 0.4f;
 	private static final int ROTATION_SPEED = 80;
 	private static final float STRAIGHT_ANGLE_TOLERANCE  = 2.0f;

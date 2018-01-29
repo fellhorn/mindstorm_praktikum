@@ -4,6 +4,8 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 import lejos.utility.DebugMessages;
 import mainRobotControl.AbstractInterruptableStateRunner;
+import mainRobotControl.ParcourState;
+import mainRobotControl.StateMachine;
 import skills.Curves;
 import skills.Sensors;
 import skills.StraightLines;
@@ -12,7 +14,6 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	
 	private enum BridgeStates {
 		ON_RAMP_UP,
-		BACK_UP_LEFT,
 		ON_BRIDGE,
 		ON_RAMP_DOWN
 	}
@@ -21,19 +22,23 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	private OwnColorSensor colorSensor;
 	private static final float MAX_DISTANCE = 0.25f,
 								SUB_INFINITY = 0.90f;
-	private static int bridgeSpeed = 400;
+	private static final int UP_SPEED = 450;
+	private static final int TRAVERSE_SPEED = 200;
+	private static final int DOWN_SPEED = 100;
 	
 	private DebugMessages message = new DebugMessages(5);
 	
 	@Override
 	protected void preLoopActions() {
 		message.clear();
-		message.echo("Crossing Bridge\nAdjust ultrasonic sensor");		
+		message.echo("Crossing Bridge");
+		message.echo("Adjust ultrasonic sensor");		
 		
 		sonicSensor = Sensors.getSonic();
 		colorSensor = Sensors.getColor();
 		
 		// Move ultra-sonic sensor ~90 degrees down
+		sonicSensor.enable();
 		Sensors.sonicUp();
 		// TODO: bridge speed??
 		
@@ -80,7 +85,17 @@ public class Bridge extends AbstractInterruptableStateRunner {
 				// Damn
 			}
 		} else {
-			StraightLines.regulatedForwardDrive(bridgeSpeed);
+			switch(bridgeState) {
+			case ON_RAMP_UP:
+				StraightLines.regulatedForwardDrive(UP_SPEED);
+				break;
+			case ON_BRIDGE:
+				StraightLines.regulatedForwardDrive(TRAVERSE_SPEED);
+				break;
+			case ON_RAMP_DOWN:
+				StraightLines.regulatedForwardDrive(DOWN_SPEED);
+				break;
+			}
 		}
 		return;
 	}
@@ -91,5 +106,6 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		
 		// The ultrasonic sensor is not used anymore
 		Sensors.sonicDown();
+		StateMachine.getInstance().setState(ParcourState.SEARCH_SPOTS);
 	}
 }

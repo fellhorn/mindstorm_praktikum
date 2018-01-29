@@ -46,20 +46,24 @@ public class Line extends AbstractInterruptableStateRunner {
 	private float[] dist = new float[] { 0.0f };
 
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
-	private int LINE_SPEED = 600;
-	private int ROTATION_SPEED = 100;
+	private static final int LINE_SPEED = 500;
+	private static final int ROTATION_SPEED = 100;
 
 	/**
-	 * Starts motors to run straight with ~55% speed. </br>
+	 * Starts motors to run straight with ~66% speed. </br>
 	 * </br>
 	 * {@inheritDoc}
 	 */
 	@Override
 	protected void preLoopActions() {
 		sonic = Sensors.getSonic();
+
 		//Sensors.calibrateSonic(0.25f);
 		col = Sensors.getColor();
 		gyro = Sensors.getGyro();
+		Sensors.calibrateSonic(0.25f);
+		Sensors.sonicDown();
+		sonic.disable();
 		StraightLines.regulatedForwardDrive(LINE_SPEED);
 		lineState = LineStates.ON_LINE_LAST_RIGHT;
 	}
@@ -68,6 +72,14 @@ public class Line extends AbstractInterruptableStateRunner {
 	protected void inLoopActions() {
 		//set to 2 for full course and 0 for testing obstacle only
 		//TODO change to bool that activates ultrasonic => test quicker
+
+		/*message.clear();
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		message.echo(gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " " + gapCount + " "); 
+		*/
+		
 		//if (gapCount >= 2) {
 
 			//sonic.getDistanceMode().fetchSample(dist, 0);
@@ -79,7 +91,8 @@ public class Line extends AbstractInterruptableStateRunner {
 				float angleArray[] = {0,0};
 				gyro.fetchSample(angleArray, 0);
 				StraightLines.setStraightAngle(angleArray[0]);
-				message.echo("angle: " + angleArray[0]);
+				message.clear();
+				message.echo("refAngle: " + angleArray[0]);
 				
 				StraightLines.wheelRotation(-0.3f, LINE_SPEED);
 				
@@ -89,7 +102,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				Curves.turnLeft90();
 				StraightLines.wheelRotation(2.8f, LINE_SPEED);
 				Curves.turnLeft90();
-				StraightLines.wheelRotation(0.5f, LINE_SPEED);
+				//StraightLines.wheelRotation(0.5f, LINE_SPEED);
 				gapCount = -1;
 				StraightLines.resetMotors();
 				lineState = LineStates.ON_GAP_LAST_RIGHT;
@@ -142,7 +155,34 @@ public class Line extends AbstractInterruptableStateRunner {
 	@Override
 	protected void postLoopActions() {
 		// TODO clear global values in case some were set
-		sonic.disable();
+		//sonic.disable();
+		StraightLines.stop();
+		StraightLines.resetMotors();
+		/*lejos.utility.Delay.msDelay(1000);
+		float[] angleArray = new float[] { StraightLines.getStraightAngle(), 0.0f };
+		gyro.fetchSample(angleArray, 1);
+		message.echo("angle: " + angleArray[1]);
+		lejos.utility.Delay.msDelay(1000);
+		if (angleArray[0] - angleArray[1] < 0.0) {
+			Curves.smoothSpeededRightTurn(-1, 50);
+			while(((angleArray[0] - angleArray[1]) % 360) < 0.0) {
+				gyro.fetchSample(angleArray, 1);
+				message.echo("angle: " + angleArray[1]);
+			}
+			StraightLines.stop();
+			StraightLines.resetMotors();
+		} else {
+			Curves.smoothSpeededLeftTurn(-1, 50);
+			while(((angleArray[0] - angleArray[1]) % 360) > 0.0) {
+				gyro.fetchSample(angleArray, 1);
+				message.echo("angle: " + angleArray[1]);
+			}
+			StraightLines.stop();
+			StraightLines.resetMotors();
+		}
+		message.echo("finalAngle: " + angleArray[1]);*/
+		
+		
 		StateMachine.getInstance().setState(ParcourState.MAZE);
 		message.echo("MAZE");
 	}
@@ -291,12 +331,12 @@ public class Line extends AbstractInterruptableStateRunner {
 			break;
 
 		case ON_GAP_LAST_LEFT:
-			StraightLines.wheelRotation(0.5f, LINE_SPEED);
+			StraightLines.wheelRotation(1.0f, LINE_SPEED);
 			lineState = LineStates.SEARCH_LINE_LAST_LEFT;
 			break;
 			
 		case ON_GAP_LAST_RIGHT:
-			StraightLines.wheelRotation(0.5f, LINE_SPEED);
+			StraightLines.wheelRotation(1.0f, LINE_SPEED);
 			lineState = LineStates.SEARCH_LINE_LAST_RIGHT;
 			// TODO what if the robot does not find the end of line after gap?
 			break;
