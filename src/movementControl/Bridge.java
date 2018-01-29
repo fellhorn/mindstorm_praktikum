@@ -22,7 +22,7 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	private OwnColorSensor colorSensor;
 	private static final float MAX_DISTANCE = 0.25f,
 								SUB_INFINITY = 0.90f;
-	private static final int UP_SPEED = 450;
+	private static final int UP_SPEED = 400;
 	private static final int TRAVERSE_SPEED = 200;
 	private static final int DOWN_SPEED = 100;
 	
@@ -106,6 +106,7 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		
 		// The ultrasonic sensor is not used anymore
 		Sensors.sonicDown();
+		Sensors.getSonic().disable();
 		StateMachine.getInstance().setState(ParcourState.SEARCH_SPOTS);
 	}
 }
