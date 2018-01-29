@@ -27,17 +27,23 @@ public class OwnColorSensor extends EV3ColorSensor {
 	public int getColorID() {
 		float[] sample = new float[3];
 		fetchSample(sample, 0);
+		//mes.echo("sum: " + (sample[0] + sample[1] + sample[2]));
+		//mes.echo("hue: " + (sample[0]/sample[2]));
 		if(sample[0] + sample[1] + sample[2] > 0.5){
-			return Color.WHITE;			
+			if(sample[0] >  0.13) {
+				return Color.WHITE;							
+			} else {
+				return Color.BLUE;
+			}
 		} else if(sample[0] + sample[1] + sample[2] < 0.01) {
 			return Color.NONE;
 		}else if(sample[0] + sample[1] + sample[2] < 0.2) {
 			return Color.BLACK;
-		}else if(sample[0]/sample[2] < 0.3){
+		}else if(sample[0]/sample[2] < 0.5){
 			mes.clear();
 			mes.echo("-----BLUE-----");
 			return Color.BLUE;
-		}else if(sample[0]/sample[2] > 8.0){
+		}else if(sample[0]/sample[2] > 9.0){
 			return Color.RED;
 		}else{
 			return Color.BLACK;

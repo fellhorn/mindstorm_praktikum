@@ -7,7 +7,7 @@ public class Curves {
 	
 	private static final int TURN_SPEED = 50;
 	private static DebugMessages message = new DebugMessages(1);
-	private static final int TURN_ANGLE = 90;
+	private static final int TURN_ANGLE = 87;
 	
 	/**
 	 * Robot performs a right turn by 90 degrees in the current place. The turn speed is constant and fairly slow.

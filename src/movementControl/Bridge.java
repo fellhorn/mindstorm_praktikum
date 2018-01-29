@@ -4,6 +4,8 @@ import lejos.hardware.sensor.EV3UltrasonicSensor;
 import lejos.robotics.Color;
 import lejos.utility.DebugMessages;
 import mainRobotControl.AbstractInterruptableStateRunner;
+import mainRobotControl.ParcourState;
+import mainRobotControl.StateMachine;
 import skills.Curves;
 import skills.Sensors;
 import skills.StraightLines;
@@ -35,6 +37,7 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		colorSensor = Sensors.getColor();
 		
 		// Move ultra-sonic sensor ~90 degrees down
+		sonicSensor.enable();
 		Sensors.sonicUp();
 		// TODO: bridge speed??
 		
@@ -92,5 +95,6 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		
 		// The ultrasonic sensor is not used anymore
 		Sensors.sonicDown();
+		StateMachine.getInstance().setState(ParcourState.SEARCH_SPOTS);
 	}
 }

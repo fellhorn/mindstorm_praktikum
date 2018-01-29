@@ -22,7 +22,9 @@ public class Test extends AbstractInterruptableStateRunner {
 		//skills.StraightLines.wheelRotation(0.25f, 400);
 		col = Sensors.getColor();
 		/*boolean tr = col.setFloodlight(Color.YELLOW);
-		*/message = new DebugMessages(1);/*
+		*/message = new DebugMessages(1);
+		message.clear();
+/*
 		message.clear();
 		System.out.println(tr + " " + col.getFloodlight());
 		int id = col.getColorID();
@@ -35,8 +37,9 @@ public class Test extends AbstractInterruptableStateRunner {
 	protected void inLoopActions() {
 		/*if(id != col.getColorID()){*/
 			int id = col.getColorID();
-			message.clear();
-			message.echo("Color: " +  id);
+			lejos.utility.Delay.msDelay(500);
+			//message.clear();
+			//message.echo("Color: " +  id);
 		
 		/*}*/
 		//spiral 

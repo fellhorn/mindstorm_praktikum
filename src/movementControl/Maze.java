@@ -101,6 +101,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private void inMazeAction() {
 		int groundColor = col.getColorID();
+		message.echo(groundColor);
 		switch (groundColor) {
 		case Color.RED:
 			message.echo("found red");
@@ -134,7 +135,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 		message.echo("Post loop action");
 		message.echo("Post loop action");
 		message.echo("Post loop action");
-
 		StraightLines.stop();
 		StateMachine.getInstance().setState(ParcourState.ON_BRIDGE);
 	}
