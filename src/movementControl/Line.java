@@ -44,7 +44,7 @@ public class Line extends AbstractInterruptableStateRunner {
 	private float[] rotDegree = new float[] { 0.0f, 0.0f };
 	private int gapCount = 0;
 	private float[] dist = new float[] { 0.0f };
-
+	private boolean tapped=false;
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
 	private int LINE_SPEED = 500;
 	private static final int ROTATION_SPEED = 100;
@@ -85,8 +85,9 @@ public class Line extends AbstractInterruptableStateRunner {
 			//sonic.getDistanceMode().fetchSample(dist, 0);
 			//if (dist[0] < 0.15) {
 			
-			if (touch.getSample() == 1.0 && (lineState == LineStates.ON_LINE_LAST_LEFT || 
+			if (!tapped && touch.getSample() == 1.0 && (lineState == LineStates.ON_LINE_LAST_LEFT || 
 											 lineState == LineStates.ON_LINE_LAST_RIGHT)) {
+				tapped=true;
 				// GO BACK CAUSE TOUCH
 				float angleArray[] = {0,0};
 				gyro.fetchSample(angleArray, 0);
@@ -139,6 +140,7 @@ public class Line extends AbstractInterruptableStateRunner {
 		case Color.RED:
 			// setting back to align to wood block
 			StraightLines.wheelRotation(-1.5f, LINE_SPEED);
+			StraightLines.wheelRotation(2, LINE_SPEED);
 			running = false;
 			break;
 		default:

@@ -44,7 +44,6 @@ public class Maze extends AbstractInterruptableStateRunner {
 		followLine = new FollowLine(col, gyro);
 
 		followLine.preLoopActions();
-		Sensors.sonicDown();
 		enterMaze();
 	}
 

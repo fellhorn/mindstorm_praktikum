@@ -38,8 +38,8 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		colorSensor = Sensors.getColor();
 		
 		// Move ultra-sonic sensor ~90 degrees up
-		sonicSensor.enable();
 		Sensors.sonicUp();
+		sonicSensor.enable();
 		// TODO: bridge speed??
 		
 		message.echo("ON_RAMP_UP");
