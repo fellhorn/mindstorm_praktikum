@@ -20,6 +20,8 @@ public class StraightLines {
 	 */
 	public static void regulatedForwardDrive(int speedRef) {
 		adjustSpeed(speedRef);
+		//message.clear();
+		//message.echo(getLeft().getTachoCount() + " - " + getRight().getTachoCount());
 		getLeft().forward();
 		getRight().forward();		
 	}
