@@ -95,7 +95,7 @@ public class Line extends AbstractInterruptableStateRunner {
 				lineState = LineStates.ON_GAP_LAST_RIGHT;
 				
 				// try to drive slower after bumper to drive more accurate afterwards
-				LINE_SPEED = LINE_SPEED / 2;
+				LINE_SPEED = LINE_SPEED / 3;
 				
 			}
 		//}
@@ -124,7 +124,8 @@ public class Line extends AbstractInterruptableStateRunner {
 			searchLine();
 			break;
 		case Color.RED:
-			// TODO change to next state
+			// setting back to align to wood block
+			StraightLines.wheelRotation(-1.5f, LINE_SPEED);
 			running = false;
 			break;
 		default:
