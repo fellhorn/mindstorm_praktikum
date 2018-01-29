@@ -7,7 +7,7 @@ public class Curves {
 	
 	private static final int TURN_SPEED = 50;
 	private static DebugMessages message = new DebugMessages(1);
-	private static final int TURN_ANGLE = 87;
+	private static final int TURN_ANGLE = 86;
 	
 	/**
 	 * Robot performs a right turn by 90 degrees in the current place. The turn speed is constant and fairly slow.
@@ -16,10 +16,14 @@ public class Curves {
 	 */
 	//TODO variable turn speed and degrees
 	public static void turnRight90() {
+		Curves.turnRight90(TURN_SPEED);
+	}
+	
+	public static void turnRight90(int turn_speed) {
 		float [] sample = {0f,0f};
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 0);
 		Sensors.getGyro().getAngleMode().fetchSample(sample, 1);
-		smoothSpeededRightTurn(-1, TURN_SPEED);
+		smoothSpeededRightTurn(-1, turn_speed);
 		
 		while (sample[1] - sample[0] < TURN_ANGLE) {
 			Sensors.getGyro().getAngleMode().fetchSample(sample, 1);

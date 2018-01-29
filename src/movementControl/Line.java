@@ -46,7 +46,7 @@ public class Line extends AbstractInterruptableStateRunner {
 	private float[] dist = new float[] { 0.0f };
 
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
-	private static final int LINE_SPEED = 500;
+	private int LINE_SPEED = 500;
 	private static final int ROTATION_SPEED = 100;
 
 	/**
@@ -100,12 +100,16 @@ public class Line extends AbstractInterruptableStateRunner {
 				Curves.turnRight90();
 				StraightLines.wheelRotation(1.2f, LINE_SPEED);
 				Curves.turnLeft90();
-				StraightLines.wheelRotation(3.0f, LINE_SPEED);
+				StraightLines.wheelRotation(2.8f, LINE_SPEED);
 				Curves.turnLeft90();
 				//StraightLines.wheelRotation(0.5f, LINE_SPEED);
 				gapCount = -1;
 				StraightLines.resetMotors();
 				lineState = LineStates.ON_GAP_LAST_RIGHT;
+				
+				// try to drive slower after bumper to drive more accurate afterwards
+				LINE_SPEED = LINE_SPEED / 3;
+				
 			}
 		//}
 		int groundColor = col.getColorID();
@@ -133,7 +137,8 @@ public class Line extends AbstractInterruptableStateRunner {
 			searchLine();
 			break;
 		case Color.RED:
-			// TODO change to next state
+			// setting back to align to wood block
+			StraightLines.wheelRotation(-1.5f, LINE_SPEED);
 			running = false;
 			break;
 		default:

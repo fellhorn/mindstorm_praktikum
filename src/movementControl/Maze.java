@@ -22,9 +22,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private float[] rotDegree = new float[] { 0.0f, 0.0f };
 
-
-	private static final int LINE_SPEED = 100;
-	private static final int ROTATION_SPEED = 70;
+	private static final int LINE_SPEED = 350;
 	
 	private static final int APPROACH_SPEED = 300;
 	
@@ -101,7 +99,7 @@ public class Maze extends AbstractInterruptableStateRunner {
 
 	private void inMazeAction() {
 		int groundColor = col.getColorID();
-		message.echo(groundColor);
+
 		switch (groundColor) {
 		case Color.RED:
 			message.echo("found red");
