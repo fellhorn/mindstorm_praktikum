@@ -14,7 +14,6 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	
 	private enum BridgeStates {
 		ON_RAMP_UP,
-		BACK_UP_LEFT,
 		ON_BRIDGE,
 		ON_RAMP_DOWN
 	}
@@ -23,7 +22,9 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	private OwnColorSensor colorSensor;
 	private static final float MAX_DISTANCE = 0.25f,
 								SUB_INFINITY = 0.90f;
-	private static int bridgeSpeed = 400;
+	private static final int UP_SPEED = 450;
+	private static final int TRAVERSE_SPEED = 200;
+	private static final int DOWN_SPEED = 100;
 	
 	private DebugMessages message = new DebugMessages(5);
 	
@@ -84,7 +85,17 @@ public class Bridge extends AbstractInterruptableStateRunner {
 				// Damn
 			}
 		} else {
-			StraightLines.regulatedForwardDrive(bridgeSpeed);
+			switch(bridgeState) {
+			case ON_RAMP_UP:
+				StraightLines.regulatedForwardDrive(UP_SPEED);
+				break;
+			case ON_BRIDGE:
+				StraightLines.regulatedForwardDrive(TRAVERSE_SPEED);
+				break;
+			case ON_RAMP_DOWN:
+				StraightLines.regulatedForwardDrive(DOWN_SPEED);
+				break;
+			}
 		}
 		return;
 	}
