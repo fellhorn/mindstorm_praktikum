@@ -34,6 +34,7 @@ public class Sensors {
 			getMedMotor().setSpeed(300);
 			getMedMotor().rotate(-SONIC_MOVEMENT_ANGLE, true);
 		}
+		sonicState = SonicStates.DOWN;
 	}
 	
 	public static void sonicUp() {
@@ -41,6 +42,7 @@ public class Sensors {
 			getMedMotor().setSpeed(300);
 			getMedMotor().rotate(SONIC_MOVEMENT_ANGLE, false);
 		}
+		sonicState = SonicStates.UP;
 	}
 
 	/**
