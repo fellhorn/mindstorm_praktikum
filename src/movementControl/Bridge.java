@@ -21,10 +21,11 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	private EV3UltrasonicSensor sonicSensor;
 	private OwnColorSensor colorSensor;
 	private static final float MAX_DISTANCE = 0.35f,
-								SUB_INFINITY = 0.90f;
-	private static final int UP_SPEED = 400;
-	private static final int TRAVERSE_SPEED = 200;
-	private static final int DOWN_SPEED = 50;
+								SUB_INFINITY = 0.90f,
+								BACKOFF_DISTANCE = 0.25f;
+	private static final int UP_SPEED = 400,
+								TRAVERSE_SPEED = 200,
+								DOWN_SPEED = 50;							
 	
 	private DebugMessages message = new DebugMessages(5);
 	
@@ -50,6 +51,9 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		// Stop wheels
 		StraightLines.stop();
 		
+		// Back off 
+		StraightLines.wheelRotation(-BACKOFF_DISTANCE, 200);
+		
 		// Turn left 90 degrees
 		Curves.turnLeft90();
 		
@@ -71,13 +75,11 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		if (sample[0] > MAX_DISTANCE && sample[0] < SUB_INFINITY) {
 			if (bridgeState == BridgeStates.ON_RAMP_UP) {
 				message.echo("ON_BRIDGE");
-				// TODO: set bridge speed
 				backOffAndTurn();
 				bridgeState = BridgeStates.ON_BRIDGE;
 				
 			} else if (bridgeState == BridgeStates.ON_BRIDGE) {
 				message.echo("ON_RAMP_DOWN");
-				// TODO: set bridge speed
 
 				backOffAndTurn();
 				bridgeState = BridgeStates.ON_RAMP_DOWN;
