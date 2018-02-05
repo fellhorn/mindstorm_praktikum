@@ -22,7 +22,8 @@ public class Bridge extends AbstractInterruptableStateRunner {
 	private OwnColorSensor colorSensor;
 	private static final float MAX_DISTANCE = 0.35f,
 								SUB_INFINITY = 0.90f,
-								BACKOFF_DISTANCE = 0.25f;
+								BACKOFF_DISTANCE_FIRST = 0.25f,
+								BACKOFF_DISTANCE_SECOND = 0.125f;
 	private static final int UP_SPEED = 400,
 								TRAVERSE_SPEED = 200,
 								DOWN_SPEED = 50;
@@ -50,10 +51,11 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		bridgeState = BridgeStates.ON_RAMP_UP;
 	}
 	
-	private void backOffAndTurn() {
+	private void backOffAndTurn(float backOffDistance) {
 		// Stop wheels
 		StraightLines.stop();
 		
+
 		for(int i=0;  i < MAJORITY_VOTE_COUNT ; i++) {
 			sonicSensor.getDistanceMode().fetchSample(sample, 0);
 			message.echo("Dist: " + sample[0]);
@@ -66,7 +68,7 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		message.echo("Voted: " + majorityVote + " of " + MAJORITY_VOTE_COUNT);
 		if(majorityVote >= MAJORITY_VOTE_COUNT * 0.5) {
 			// Back off 
-			StraightLines.wheelRotation(-BACKOFF_DISTANCE, 200);
+			StraightLines.wheelRotation(-backOffDistance, 200);
 			
 			// Turn left 90 degrees
 			Curves.turnLeft90();
@@ -75,6 +77,7 @@ public class Bridge extends AbstractInterruptableStateRunner {
 			StraightLines.resetMotors();
 			swapState();
 		}
+
 	}
 
 	@Override
@@ -89,13 +92,16 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		// Continuously check if sensor measures infinity
 		if (sample[0] > MAX_DISTANCE && sample[0] < SUB_INFINITY) {
 			if (bridgeState == BridgeStates.ON_RAMP_UP) {
+
 				message.echo("Check ON_BRIDGE");
-				backOffAndTurn();
+				backOffAndTurn(BACKOFF_DISTANCE_FIRST);
+
 				
 			} else if (bridgeState == BridgeStates.ON_BRIDGE) {
 				message.echo("Check ON_RAMP_DOWN");
 
-				backOffAndTurn();
+				backOffAndTurn(BACKOFF_DISTANCE_SECOND);
+
 			} else {
 				// Damn
 			}
