@@ -25,7 +25,10 @@ public class Bridge extends AbstractInterruptableStateRunner {
 								BACKOFF_DISTANCE = 0.25f;
 	private static final int UP_SPEED = 400,
 								TRAVERSE_SPEED = 200,
-								DOWN_SPEED = 50;							
+								DOWN_SPEED = 50;
+	private float [] sample = {0f, 0f};
+	private int majorityVote = 0;
+	private static int MAJORITY_VOTE_COUNT = 100;
 	
 	private DebugMessages message = new DebugMessages(5);
 	
@@ -51,14 +54,27 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		// Stop wheels
 		StraightLines.stop();
 		
-		// Back off 
-		StraightLines.wheelRotation(-BACKOFF_DISTANCE, 200);
-		
-		// Turn left 90 degrees
-		Curves.turnLeft90();
-		
-		// Reset counters
-		StraightLines.resetMotors();
+		for(int i=0;  i < MAJORITY_VOTE_COUNT ; i++) {
+			sonicSensor.getDistanceMode().fetchSample(sample, 0);
+			message.echo("Dist: " + sample[0]);
+			
+			if (sample[0] > MAX_DISTANCE && sample[0] < SUB_INFINITY) {
+				majorityVote ++;
+			}
+		}
+		message.clear();
+		message.echo("Voted: " + majorityVote + " of " + MAJORITY_VOTE_COUNT);
+		if(majorityVote >= MAJORITY_VOTE_COUNT * 0.5) {
+			// Back off 
+			StraightLines.wheelRotation(-BACKOFF_DISTANCE, 200);
+			
+			// Turn left 90 degrees
+			Curves.turnLeft90();
+			
+			// Reset counters
+			StraightLines.resetMotors();
+			swapState();
+		}
 	}
 
 	@Override
@@ -67,22 +83,19 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		if (colorSensor.getColorID() == Color.BLUE && bridgeState == BridgeStates.ON_RAMP_DOWN) {
 			running = false;
 		}
-		float [] sample = {0f,0f};
 		sonicSensor.getDistanceMode().fetchSample(sample, 0);
 		message.echo("Dist: " + sample[0]);
 		
 		// Continuously check if sensor measures infinity
 		if (sample[0] > MAX_DISTANCE && sample[0] < SUB_INFINITY) {
 			if (bridgeState == BridgeStates.ON_RAMP_UP) {
-				message.echo("ON_BRIDGE");
+				message.echo("Check ON_BRIDGE");
 				backOffAndTurn();
-				bridgeState = BridgeStates.ON_BRIDGE;
 				
 			} else if (bridgeState == BridgeStates.ON_BRIDGE) {
-				message.echo("ON_RAMP_DOWN");
+				message.echo("Check ON_RAMP_DOWN");
 
 				backOffAndTurn();
-				bridgeState = BridgeStates.ON_RAMP_DOWN;
 			} else {
 				// Damn
 			}
@@ -110,5 +123,14 @@ public class Bridge extends AbstractInterruptableStateRunner {
 		Sensors.sonicDown();
 		Sensors.getSonic().disable();
 		StateMachine.getInstance().setState(ParcourState.SEARCH_SPOTS);
+	}
+	
+	protected void swapState() {
+		if(bridgeState == BridgeStates.ON_RAMP_UP) {
+			bridgeState = BridgeStates.ON_BRIDGE;
+		}
+		if(bridgeState == BridgeStates.ON_BRIDGE) {
+			bridgeState = BridgeStates.ON_RAMP_DOWN;
+		}
 	}
 }

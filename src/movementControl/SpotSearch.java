@@ -20,7 +20,7 @@ import skills.StraightLines;
  */
 public class SpotSearch extends AbstractInterruptableStateRunner {
 
-	private static float backoffDistance = 0.2f;
+	private static float backoffDistance = 0.1f;
 	private static final int speed = 520;
 
 	private boolean foundRed = false, foundWhite = false, tapped = false;
@@ -62,6 +62,7 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 			mes.echo("#############");
 			mes.echo("#############");
 			Sound.buzz();
+			backoffDistance += 4.0;
 		}
 		if (foundRed && foundWhite) {
 			// Success!!
