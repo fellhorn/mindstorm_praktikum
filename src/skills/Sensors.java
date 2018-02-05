@@ -25,7 +25,7 @@ public class Sensors {
 	private static SonicStates sonicState = SonicStates.DOWN;
 	/**
 	 * Default position sonicUp -> measured distance is ~15cm
-	 * SonicDown means 90Â° down
+	 * SonicDown means 90° down
 	 */
 	public static void sonicDown() {
 		// Forward = up

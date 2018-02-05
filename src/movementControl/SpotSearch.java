@@ -88,7 +88,7 @@ public class SpotSearch extends AbstractInterruptableStateRunner {
 			// Set tapped every time
 			tapped = true;
 			contacts ++;
-			if (contacts  >= 4) {
+			if (contacts  >= 4 && foundWhite) {
 				// Increase back-off distance to shrink circle
 				backoffDistance ++;
 				contacts = 0;
