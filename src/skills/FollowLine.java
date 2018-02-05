@@ -47,8 +47,8 @@ public class FollowLine {
 
 	private static final float SEARCH_ROTATION_TOLERANCE = 5.0f;
 
-	private static final int LINE_SPEED = 180;
-	private static final int ROTATION_SPEED = 80;
+	private static final int LINE_SPEED = 250;
+	private static final int ROTATION_SPEED = 120;
 	
 	public FollowLine(OwnColorSensor colorSensor, EV3GyroSensor gyroSensor) {
 		this.col = colorSensor;
